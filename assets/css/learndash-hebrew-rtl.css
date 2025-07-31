@@ -1,0 +1,170 @@
+/**
+ * LearnDash Hebrew/RTL Custom Styles
+ * Override LD30 theme for proper Hebrew display
+ */
+
+/* ✅ פונט אחיד לכל האתר */
+body, 
+.ld-topic-list, 
+.ld-topic-title, 
+.ld-text, 
+.ld-description,
+.ld-item-list,
+.ld-lesson-item,
+.ld-lesson-title,
+.ld-lesson-item-preview,
+.ld-table-list-header,
+.ld-table-list-item {
+    font-family: 'Assistant', sans-serif !important;
+    direction: rtl !important;
+    text-align: right !important;
+}
+
+/* ✅ כותרת עליונה – תוכן הקורס */
+.course-title, 
+.ld-section-heading h2,
+.ld-section-heading .ld-section-heading-title {
+    font-size: 32px !important;
+    font-weight: 700 !important;
+    color: #2f2f92 !important;
+    margin-bottom: 24px !important;
+    text-align: right !important;
+    direction: rtl !important;
+}
+
+/* ✅ כפתור Expand All */
+.ld-expand-button, 
+.expand-button,
+.ld-button.ld-button-transparent {
+    background-color: #2f2f92 !important;
+    color: white !important;
+    padding: 8px 20px !important;
+    border-radius: 999px !important;
+    border: none !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    direction: rtl !important;
+}
+
+/* ✅ קופסה של כל פרק */
+.ld-item-list-section, 
+.ld-lesson-item,
+.ld-item-list-item {
+    border: 1px solid #e0e6ed !important;
+    border-radius: 8px !important;
+    padding: 24px !important;
+    margin-bottom: 16px !important;
+    background-color: #fff !important;
+    direction: rtl !important;
+    text-align: right !important;
+}
+
+/* ✅ מספר נושאים */
+.topic-count, 
+.ld-lesson-topic-list .ld-table-list-header,
+.ld-table-list-header {
+    font-size: 14px !important;
+    color: #6b7c93 !important;
+    margin-top: 8px !important;
+    direction: rtl !important;
+    text-align: right !important;
+}
+
+/* ✅ אייקון וי של מצב סיום */
+.status-icon, 
+.ld-status-complete,
+.ld-status .ld-status-complete {
+    color: #00b383 !important;
+    font-size: 16px !important;
+    margin-left: 6px !important;
+    vertical-align: middle !important;
+}
+
+/* ✅ חץ לפתיחה/סגירה */
+.toggle-icon, 
+.ld-lesson-item-expand,
+.ld-expand-button {
+    font-size: 12px !important;
+    color: #2f2f92 !important;
+    margin-top: 12px !important;
+    display: inline-block !important;
+    transform: rotate(0deg) !important;
+    transition: transform 0.3s ease !important;
+}
+
+.toggle-icon.open, 
+.ld-lesson-item-expand.ld-expanded {
+    transform: rotate(180deg) !important;
+}
+
+/* RTL specific adjustments */
+.ld-item-list-items {
+    direction: rtl !important;
+}
+
+.ld-lesson-item-preview {
+    text-align: right !important;
+    direction: rtl !important;
+}
+
+.ld-lesson-title {
+    direction: rtl !important;
+    text-align: right !important;
+    font-family: 'Assistant', sans-serif !important;
+}
+
+/* Course content wrapper */
+.learndash-wrapper {
+    direction: rtl !important;
+}
+
+/* Lesson topics */
+.ld-lesson-topic-list {
+    direction: rtl !important;
+    text-align: right !important;
+}
+
+.ld-lesson-topic-list .ld-table-list-item {
+    direction: rtl !important;
+    text-align: right !important;
+}
+
+/* Quiz items */
+.ld-quiz-item {
+    direction: rtl !important;
+    text-align: right !important;
+}
+
+/* Progress indicators */
+.ld-progress {
+    direction: rtl !important;
+}
+
+/* Buttons and links */
+.ld-button,
+.ld-link {
+    direction: rtl !important;
+    text-align: center !important;
+}
+
+/* Course navigation */
+.ld-course-navigation {
+    direction: rtl !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .course-title, 
+    .ld-section-heading h2 {
+        font-size: 24px !important;
+    }
+    
+    .ld-lesson-item,
+    .ld-item-list-item {
+        padding: 16px !important;
+    }
+}

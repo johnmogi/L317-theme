@@ -194,19 +194,23 @@
 
     // Check session status
     const checkSession = function() {
-        const timeSinceLastActivity = Date.now() - lastActivity;
+        // Skip session checks for admin users
+        if (checkUserRole()) {
+            return;
+        }
+        
+        const now = Date.now();
+        const timeSinceLastActivity = now - lastActivity;
         const timeUntilTimeout = DEFAULTS.sessionTimeout - timeSinceLastActivity;
         
-        // If we're within the warning period, show the warning
-        if (timeUntilTimeout > 0 && timeUntilTimeout <= DEFAULTS.warningBeforeTimeout && !warningShown) {
-            showWarning();
-        }
-        // If session has expired
-        else if (timeUntilTimeout <= 0) {
-            clearInterval(activityCheckInterval);
-            if (typeof window.LilacToast.config.session.onSessionExpired === 'function') {
-                window.LilacToast.config.session.onSessionExpired();
+        if (timeUntilTimeout <= 0) {
+            // Session has expired
+            if (typeof DEFAULTS.onSessionExpired === 'function') {
+                DEFAULTS.onSessionExpired();
             }
+        } else if (timeUntilTimeout <= DEFAULTS.warningBefore && !warningShown) {
+            // Show warning before session expires
+            showWarning();
         }
     };
 

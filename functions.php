@@ -5,6 +5,76 @@
  * @package Lilac
  */
 
+// Debug LearnDash template loading
+add_action('template_include', function($template) {
+    if (is_singular('sfwd-courses')) {
+        error_log('Current template being loaded: ' . $template);
+        error_log('Trying to load custom template...');
+    }
+    return $template;
+}, 9999);
+
+// Force template override for LearnDash
+add_filter('learndash_template', function($filepath, $name, $args, $echo, $return_file_path) {
+    if ('course/listing.php' === $name) {
+        $custom_template = get_stylesheet_directory() . '/learndash/ld30/templates/course/listing.php';
+        if (file_exists($custom_template)) {
+            error_log('Overriding template with: ' . $custom_template);
+            return $custom_template;
+        }
+    }
+    return $filepath;
+}, 100, 5);
+
+// Completely override the LearnDash template loading system
+add_filter('learndash_template', function($filepath, $name, $args, $echo, $return_file_path) {
+    // Only override the course listing template
+    if ('course/listing.php' === $name) {
+        $custom_template = get_stylesheet_directory() . '/learndash/ld30/templates/course/listing.php';
+        if (file_exists($custom_template)) {
+            // Log that we're using our custom template
+            error_log('LILAC: Using custom template: ' . $custom_template);
+            
+            // Add a debug marker to the page
+            add_action('wp_footer', function() use ($custom_template) {
+                echo '<!-- LILAC DEBUG: Using custom template: ' . esc_html($custom_template) . ' -->';
+                echo '<style>#lilac-debug { position: fixed; bottom: 0; left: 0; right: 0; background: #ff0000; color: white; padding: 10px; text-align: center; z-index: 9999; }</style>';
+                echo '<div id="lilac-debug">LILAC CUSTOM TEMPLATE: ' . esc_html($custom_template) . '</div>';
+            });
+            
+            return $custom_template;
+        }
+    }
+    return $filepath;
+}, 9999, 5);
+
+// Force LearnDash to use our template directory first
+add_filter('learndash_template_paths', function($paths) {
+    $custom_path = get_stylesheet_directory() . '/learndash/ld30/templates';
+    if (file_exists($custom_path)) {
+        array_unshift($paths, $custom_path);
+        error_log('LILAC: Added custom template path: ' . $custom_path);
+    }
+    return $paths;
+}, 9999);
+
+// Debug: Log when our template is being loaded
+add_action('template_redirect', function() {
+    if (is_singular('sfwd-courses') || is_post_type_archive('sfwd-courses')) {
+        error_log('LILAC: Course page loaded - checking template');
+        error_log('LILAC: Theme directory: ' . get_stylesheet_directory());
+        
+        // Check if our custom template exists
+        $custom_template = get_stylesheet_directory() . '/learndash/ld30/templates/course/listing.php';
+        error_log('LILAC: Custom template exists: ' . (file_exists($custom_template) ? 'YES' : 'NO'));
+        
+        // Log the current template hierarchy
+        if (function_exists('get_page_template_slug')) {
+            error_log('LILAC: Page template slug: ' . get_page_template_slug());
+        }
+    }
+});
+
 // Fix for LearnDash WooCommerce translation loading issue
 add_action('init', function() {
     // Only proceed if we're not in admin or doing AJAX
@@ -1119,6 +1189,172 @@ function enqueue_progress_bar_styles() {
 }
 add_action('wp_enqueue_scripts', 'enqueue_progress_bar_styles', 99);
 
+/**
+ * Enqueue Hebrew/RTL LearnDash styles
+ */
+function enqueue_learndash_hebrew_rtl_styles() {
+    // Only load on LearnDash pages or when LearnDash content is present
+    if (is_singular(['sfwd-courses', 'sfwd-lessons', 'sfwd-topic', 'sfwd-quiz']) || 
+        has_shortcode(get_post()->post_content ?? '', 'course_content') ||
+        has_shortcode(get_post()->post_content ?? '', 'learndash_course_list')) {
+        
+        // Main Hebrew RTL styles
+        wp_enqueue_style(
+            'learndash-hebrew-rtl',
+            get_stylesheet_directory_uri() . '/assets/css/learndash-hebrew-rtl.css',
+            ['learndash-front'],
+            LILAC_THEME_VERSION,
+            'all'
+        );
+        
+        // Enqueue LearnDash lesson and course specific styles - SIMPLIFIED VERSION
+        if (is_singular(['sfwd-courses', 'sfwd-lessons', 'sfwd-topic'])) {
+            wp_enqueue_style(
+                'learndash-course-simple',
+                get_stylesheet_directory_uri() . '/assets/css/learndash-lesson-course-simple.css',
+                ['learndash-hebrew-rtl'],
+                LILAC_THEME_VERSION . '-simple',
+                'all'
+            );
+            
+            // Enqueue JavaScript to force layout transformation
+            wp_enqueue_script(
+                'learndash-layout-transform',
+                get_stylesheet_directory_uri() . '/assets/js/learndash-layout-transform.js',
+                ['jquery'],
+                LILAC_THEME_VERSION . '-v2.0',
+                true
+            );
+            
+            // Add inline JavaScript as backup to force transformation
+            add_action('wp_footer', function() {
+                if (is_singular(['sfwd-courses', 'sfwd-lessons', 'sfwd-topic'])) {
+                    ?>
+                    <style>
+                    /* Emergency CSS overrides with maximum specificity */
+                    body.sfwd-courses .learndash-wrapper .ld-accordion .ld-accordion__items--lessons {
+                        display: grid !important;
+                        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)) !important;
+                        gap: 2rem !important;
+                        padding: 1rem !important;
+                        background: #f8fafc !important;
+                        border-radius: 12px !important;
+                        list-style: none !important;
+                    }
+                    
+                    body.sfwd-courses .learndash-wrapper .ld-accordion .ld-accordion__item--lesson {
+                        background: white !important;
+                        border: 1px solid #e2e8f0 !important;
+                        border-radius: 12px !important;
+                        padding: 0 !important;
+                        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05) !important;
+                        transition: all 0.3s ease !important;
+                        overflow: hidden !important;
+                        display: flex !important;
+                        flex-direction: column !important;
+                        margin-bottom: 0 !important;
+                    }
+                    
+                    body.sfwd-courses .learndash-wrapper .ld-accordion .ld-accordion__item--lesson:hover {
+                        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
+                        transform: translateY(-2px) !important;
+                        border-color: #4f46e5 !important;
+                    }
+                    
+                    body.sfwd-courses .learndash-wrapper .ld-accordion .ld-accordion__item-header--lesson {
+                        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+                        color: white !important;
+                        padding: 1.5rem !important;
+                        margin: 0 !important;
+                        border: none !important;
+                    }
+                    
+                    body.sfwd-courses .learndash-wrapper .ld-accordion .ld-accordion__item-title--lesson {
+                        color: white !important;
+                        font-size: 1.2rem !important;
+                        font-weight: 600 !important;
+                        text-decoration: none !important;
+                        display: block !important;
+                    }
+                    
+                    body.sfwd-courses .learndash-wrapper .ld-accordion .ld-accordion__expand-button--lesson {
+                        display: none !important;
+                    }
+                    
+                    body.sfwd-courses .learndash-wrapper .ld-accordion .ld-accordion__item-steps {
+                        display: block !important;
+                        padding: 1.5rem !important;
+                        background: white !important;
+                    }
+                    
+                    body.sfwd-courses .learndash-wrapper .ld-accordion .ld-accordion__items--topics {
+                        display: flex !important;
+                        flex-direction: column !important;
+                        gap: 0.75rem !important;
+                        padding: 0 !important;
+                    }
+                    
+                    body.sfwd-courses .learndash-wrapper .ld-accordion .ld-accordion__item--topic {
+                        background: #f9fafb !important;
+                        border: 1px solid #e5e7eb !important;
+                        border-radius: 8px !important;
+                        padding: 1rem !important;
+                        transition: all 0.2s ease !important;
+                        display: flex !important;
+                        align-items: flex-start !important;
+                        gap: 1rem !important;
+                    }
+                    
+                    body.sfwd-courses .learndash-wrapper .ld-layout__header {
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+                        color: white !important;
+                        padding: 2rem !important;
+                        border-radius: 12px !important;
+                        margin-bottom: 2rem !important;
+                    }
+                    
+                    body.sfwd-courses .learndash-wrapper .ld-progress-percentage {
+                        color: white !important;
+                        font-weight: 600 !important;
+                    }
+                    
+                    body.sfwd-courses .learndash-wrapper .ld-progress-steps {
+                        color: rgba(255, 255, 255, 0.9) !important;
+                    }
+                    </style>
+                    
+                    <script>
+                    console.log('LearnDash Emergency Transformation Script Loading...');
+                    
+                    // Wait for page to fully load
+                    window.addEventListener('load', function() {
+                        console.log('Page loaded, applying LearnDash transformation...');
+                        
+                        // Force show all lesson content
+                        setTimeout(function() {
+                            var steps = document.querySelectorAll('.ld-accordion__item-steps');
+                            steps.forEach(function(step) {
+                                step.style.display = 'block';
+                                step.classList.add('ld-expanded');
+                            });
+                            
+                            // Hide all expand buttons
+                            var buttons = document.querySelectorAll('.ld-accordion__expand-button--lesson');
+                            buttons.forEach(function(btn) {
+                                btn.style.display = 'none';
+                            });
+                            
+                            console.log('LearnDash transformation completed!');
+                        }, 1000);
+                    });
+                    </script>
+                    <?php
+                }
+            });
+        }
+    }
+}
+add_action('wp_enqueue_scripts', 'enqueue_learndash_hebrew_rtl_styles', 100);
 // Load other theme files
 require_once get_stylesheet_directory() . '/inc/shortcodes/loader.php';
 require_once get_stylesheet_directory() . '/includes/ld30-styles.php';

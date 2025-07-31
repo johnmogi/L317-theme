@@ -1,0 +1,543 @@
+/**
+ * LearnDash Modern Course & Lesson Layout
+ * Robust, card-based design with Hebrew RTL support
+ */
+
+/* Global RTL and font setup */
+body.single-sfwd-courses,
+body.single-sfwd-lessons,
+body.single-sfwd-topic {
+    font-family: 'Assistant', sans-serif !important;
+    direction: rtl !important;
+    background-color: #2C3391 !important;
+}
+
+/* Main course container */
+.learndash-wrapper,
+.ld-course-wrapper {
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    direction: rtl !important;
+}
+
+/* Course header section - Updated to match site header blue */
+.ld-course-header {
+    background: #2C3391 !important; /* Updated blue color */
+    color: white !important;
+    padding: 2.5rem 2rem !important;
+    border-radius: 0 !important; /* Removed border radius to match header */
+    margin: 0 0 2rem 0 !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+    text-align: right !important;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Add subtle gradient overlay for depth */
+.ld-course-header::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%) !important;
+    pointer-events: none;
+}
+
+.ld-course-header h1,
+.entry-title {
+    font-size: 2.5rem !important;
+    font-weight: 800 !important;
+    color: white !important;
+    margin: 0 0 1rem 0 !important;
+    line-height: 1.2 !important;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+}
+
+.ld-course-header .course-description {
+    font-size: 1.1rem !important;
+    opacity: 0.9 !important;
+    line-height: 1.6 !important;
+    margin-top: 1rem !important;
+}
+
+/* Progress bar modern design - Updated colors */
+.ld-progress {
+    background: rgba(255,255,255,0.2) !important;
+    border-radius: 50px !important;
+    height: 8px !important; /* Slightly thinner */
+    margin: 1.25rem 0 !important;
+    overflow: hidden !important;
+    direction: ltr !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+.ld-progress-bar {
+    background: #4c6ef5 !important; /* Brighter blue to match header */
+    height: 100% !important;
+    border-radius: 50px !important;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: none !important;
+}
+
+.ld-progress-stats {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-top: 1rem !important;
+    font-size: 0.9rem !important;
+    opacity: 0.9 !important;
+}
+
+.ld-progress-bar {
+    height: 8px !important;
+    background-color: #e2e8f0 !important;
+    border-radius: 4px !important;
+    overflow: hidden !important;
+
+/* Course content sections - Fixed alignment and shadows */
+.ld-course-content,
+.ld-lesson-content {
+    background: white !important;
+    border-radius: 8px !important; /* Slightly less rounded */
+    padding: 2rem !important;
+    margin: 0 0 2rem 0 !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important; /* Softer shadow */
+    border: 1px solid #e2e8f0 !important;
+    transition: all 0.3s ease !important;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Fix for any tilted elements */
+.ld-course-content *,
+.ld-lesson-content *,
+.ld-item-list *,
+.ld-item-list-item * {
+    transform: none !important;
+    transform-origin: 0 0 !important;
+}
+
+/* Ensure all text is properly aligned */
+.ld-course-content,
+.ld-lesson-content,
+.ld-item-list-item,
+.ld-item-details {
+    text-align: right !important;
+    direction: rtl !important;
+}
+
+.ld-course-content:hover,
+.ld-lesson-content:hover {
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12) !important;
+}
+
+/* Course sections/modules */
+.ld-item-list {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.ld-item-list-section {
+    background: white !important;
+    border: 2px solid #e2e8f0 !important;
+    border-radius: 16px !important;
+    margin-bottom: 1.5rem !important;
+    overflow: hidden !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05) !important;
+}
+
+.ld-item-list-section:hover {
+    border-color: #2C3391 !important;
+    box-shadow: 0 8px 25px rgba(47, 47, 146, 0.15) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* Section headers */
+.ld-item-list-section-heading {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%) !important;
+    padding: 1.5rem 2rem !important;
+    border-bottom: 2px solid #e2e8f0 !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    position: relative !important;
+}
+
+.ld-item-list-section-heading:hover {
+    background: linear-gradient(135deg, #2f2f92 0%, #4c51bf 100%) !important;
+    color: white !important;
+}
+
+.ld-item-list-section-heading h3,
+.ld-section-heading {
+    font-size: 1.4rem !important;
+    font-weight: 700 !important;
+    color: #2C3391 !important;
+    margin: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+.ld-item-list-section-heading:hover h3 {
+    color: white !important;
+}
+
+/* Section meta info */
+.ld-section-meta {
+    display: flex !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    font-size: 0.9rem !important;
+    color: #64748b !important;
+    margin-top: 0.5rem !important;
+}
+
+.ld-section-meta .topic-count,
+.ld-section-meta .quiz-count {
+    background: #e2e8f0 !important;
+    padding: 0.25rem 0.75rem !important;
+    border-radius: 20px !important;
+    font-weight: 600 !important;
+    color: #475569 !important;
+}
+
+/* Expand/collapse button */
+.ld-expand-button,
+.ld-item-list-section-heading::after {
+    content: '▼' !important;
+    font-size: 1rem !important;
+    color: #2C3391 !important;
+    transition: transform 0.3s ease !important;
+    margin-left: 1rem !important;
+}
+
+.ld-item-list-section.ld-expanded .ld-item-list-section-heading::after {
+    transform: rotate(180deg) !important;
+}
+
+.ld-item-list-section-heading:hover::after {
+    color: white !important;
+}
+
+/* Individual lesson/topic items */
+.ld-item-list-items {
+    padding: 0 !important;
+}
+
+.ld-item-list-item {
+    padding: 1.25rem 2rem !important;
+    border-bottom: 3px solid #2C3391 !important;
+    transition: all 0.3s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+.ld-item-list-item:hover {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%) !important;
+    padding-right: 2.5rem !important;
+}
+
+.ld-item-list-item:last-child {
+    border-bottom: none !important;
+}
+
+.ld-item-name {
+    font-size: 1.1rem !important;
+    font-weight: 600 !important;
+    color: #2d3748 !important;
+    text-decoration: none !important;
+    flex-grow: 1 !important;
+}
+
+.ld-item-name:hover {
+    color: #2C3391 !important;
+}
+
+/* Status indicators */
+.ld-status {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    font-size: 0.9rem !important;
+    font-weight: 600 !important;
+}
+
+.ld-status.ld-status-complete {
+    color: #10b981 !important;
+}
+
+.ld-status.ld-status-complete::before {
+    content: '✓' !important;
+    background: #10b981 !important;
+    color: white !important;
+    width: 20px !important;
+    height: 20px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 12px !important;
+    font-weight: bold !important;
+}
+
+.ld-status.ld-status-incomplete {
+    color: #f59e0b !important;
+}
+
+.ld-status.ld-status-incomplete::before {
+    content: '○' !important;
+    color: #f59e0b !important;
+    font-size: 16px !important;
+}
+
+/* Navigation buttons */
+.ld-button {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 1rem 2rem !important;
+    border-radius: 50px !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+    text-decoration: none !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    margin: 0.5rem !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+}
+
+.ld-button.ld-button-transparent,
+.ld-button-primary {
+    background: linear-gradient(135deg, #2f2f92 0%, #4c51bf 100%) !important;
+    color: white !important;
+    border: none !important;
+}
+
+.ld-button.ld-button-transparent:hover,
+.ld-button-primary:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 20px rgba(47, 47, 146, 0.3) !important;
+}
+
+.ld-button-secondary {
+    background: white !important;
+    color: #2C3391 !important;
+    box-shadow: 0 0 0 2px #2C3391 !important;
+}
+
+.ld-button-secondary:hover {
+    background: #2f2f92 !important;
+    color: white !important;
+    transform: translateY(-2px) !important;
+}
+
+/* Course navigation and pagination */
+.ld-course-navigation {
+    background: white !important;
+    border-radius: 12px !important;
+    padding: 2rem !important;
+    margin: 2rem 0 !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important;
+    border: 1px solid #e2e8f0 !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .ld-course-header {
+        padding: 2rem 1.5rem !important;
+    }
+    
+    .ld-course-header h1 {
+        font-size: 2rem !important;
+    }
+    
+    .ld-course-content,
+    .ld-lesson-content {
+        padding: 1.5rem !important;
+        margin: 1rem 0 !important;
+    }
+    
+    .ld-item-list-section-heading {
+        padding: 1rem 1.5rem !important;
+    }
+    
+    .ld-item-list-item {
+        padding: 1rem 1.5rem !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 0.5rem !important;
+    }
+    
+    .ld-button {
+        width: 100% !important;
+        margin: 0.25rem 0 !important;
+    }
+    
+    .ld-course-navigation {
+        flex-direction: column !important;
+        gap: 1rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .learndash-wrapper,
+    .ld-course-wrapper {
+        padding: 1rem 0.5rem !important;
+    }
+    
+    .ld-course-header h1 {
+        font-size: 1.75rem !important;
+    }
+    
+    .ld-item-list-section-heading h3 {
+        font-size: 1.2rem !important;
+    }
+}
+
+/* Typography and content styling */
+.ld-course-content h2,
+.ld-course-content h3,
+.ld-course-content h4,
+.ld-lesson-content h2,
+.ld-lesson-content h3,
+.ld-lesson-content h4 {
+    color: #2C3391 !important;
+    margin: 2rem 0 1rem 0 !important;
+    font-weight: 700 !important;
+    line-height: 1.3 !important;
+}
+
+.ld-course-content h2,
+.ld-lesson-content h2 {
+    font-size: 1.75rem !important;
+    border-bottom: 3px solid #e2e8f0 !important;
+    padding-bottom: 0.5rem !important;
+}
+
+.ld-course-content h3,
+.ld-lesson-content h3 {
+    font-size: 1.5rem !important;
+}
+
+.ld-course-content h4,
+.ld-lesson-content h4 {
+    font-size: 1.25rem !important;
+}
+
+.ld-course-content p,
+.ld-lesson-content p {
+    margin-bottom: 1.5rem !important;
+    line-height: 1.8 !important;
+    font-size: 1.1rem !important;
+    color: #4a5568 !important;
+}
+
+.ld-course-content ul,
+.ld-course-content ol,
+.ld-lesson-content ul,
+.ld-lesson-content ol {
+    margin-right: 2rem !important;
+    margin-bottom: 1.5rem !important;
+    line-height: 1.7 !important;
+}
+
+.ld-course-content li,
+.ld-lesson-content li {
+    margin-bottom: 0.75rem !important;
+    font-size: 1.05rem !important;
+    color: #4a5568 !important;
+}
+
+/* Special elements */
+.ld-course-content blockquote,
+.ld-lesson-content blockquote {
+    border-left: 4px solid #2C3391 !important;
+    background: #f8fafc !important;
+    padding: 1.5rem !important;
+    margin: 2rem 0 !important;
+    border-radius: 8px !important;
+    font-style: italic !important;
+    color: #2d3748 !important;
+}
+
+.ld-course-content code,
+.ld-lesson-content code {
+    background: #f1f5f9 !important;
+    padding: 0.25rem 0.5rem !important;
+    border-radius: 4px !important;
+    font-family: 'Courier New', monospace !important;
+    color: #2C3391 !important;
+    font-size: 0.9em !important;
+}
+
+/* Animation and interaction effects */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.ld-item-list-section {
+    animation: fadeInUp 0.6s ease-out !important;
+}
+
+.ld-item-list-section:nth-child(2) { animation-delay: 0.1s !important; }
+.ld-item-list-section:nth-child(3) { animation-delay: 0.2s !important; }
+.ld-item-list-section:nth-child(4) { animation-delay: 0.3s !important; }
+.ld-item-list-section:nth-child(5) { animation-delay: 0.4s !important; }
+
+/* Focus and accessibility improvements */
+.ld-button:focus,
+.ld-item-name:focus,
+.ld-item-list-section-heading:focus {
+    outline: 3px solid rgba(47, 47, 146, 0.3) !important;
+    outline-offset: 2px !important;
+}
+
+/* Print styles */
+@media print {
+    .ld-course-header {
+        background: white !important;
+        color: black !important;
+        box-shadow: none !important;
+    }
+    
+    .ld-button {
+        display: none !important;
+    }
+    
+    .ld-item-list-section {
+        break-inside: avoid !important;
+        box-shadow: none !important;
+        border: 1px solid #ccc !important;
+    }
+}
+
+/* Dark mode support (if needed) */
+@media (prefers-color-scheme: dark) {
+    body.single-sfwd-courses,
+    body.single-sfwd-lessons,
+    body.single-sfwd-topic {
+        background-color: #1a202c !important;
+    }
+    
+    .ld-course-content,
+    .ld-lesson-content,
+    .ld-item-list-section {
+        background: #2d3748 !important;
+        border-color: #4a5568 !important;
+        color: #e2e8f0 !important;
+    }
+}

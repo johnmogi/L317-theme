@@ -1,0 +1,353 @@
+/**
+ * LearnDash FORCEFUL Layout Override
+ * Maximum specificity CSS to completely control LearnDash appearance
+ */
+
+/* RESET AND FORCE BASE STYLES */
+body.single-sfwd-courses *,
+body.single-sfwd-lessons *,
+body.single-sfwd-topic * {
+    box-sizing: border-box !important;
+}
+
+body.single-sfwd-courses,
+body.single-sfwd-lessons,
+body.single-sfwd-topic {
+    font-family: 'Assistant', sans-serif !important;
+    direction: rtl !important;
+    background-color: #f7fafc !important;
+    line-height: 1.6 !important;
+}
+
+/* FORCE MAIN CONTAINER STYLES */
+.learndash-wrapper,
+.ld-course-wrapper,
+#learndash-course-content,
+.learndash_course_content {
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+    padding: 2rem 1rem !important;
+    direction: rtl !important;
+    background: transparent !important;
+}
+
+/* FORCE COURSE TITLE AND HEADER */
+.entry-title,
+h1.entry-title,
+.course-title,
+.ld-course-title {
+    font-size: 2.5rem !important;
+    font-weight: 800 !important;
+    color: #2f2f92 !important;
+    text-align: right !important;
+    margin: 2rem 0 !important;
+    padding: 2rem !important;
+    background: linear-gradient(135deg, #2f2f92 0%, #4c51bf 100%) !important;
+    color: white !important;
+    border-radius: 16px !important;
+    box-shadow: 0 10px 25px rgba(47, 47, 146, 0.15) !important;
+}
+
+/* FORCE COURSE CONTENT CONTAINER */
+.ld-course-content,
+.learndash-course-content,
+#learndash-course-content .ld-course-content {
+    background: white !important;
+    border-radius: 12px !important;
+    padding: 2rem !important;
+    margin: 2rem 0 !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important;
+    border: 1px solid #e2e8f0 !important;
+}
+
+/* FORCE SECTION LIST STYLES */
+.ld-item-list,
+.ld-course-sections,
+.learndash-course-sections {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* FORCE INDIVIDUAL SECTION CARDS */
+.ld-item-list-section,
+.ld-course-section,
+.learndash-course-section {
+    background: white !important;
+    border: 2px solid #e2e8f0 !important;
+    border-radius: 16px !important;
+    margin: 0 0 2rem 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08) !important;
+    transition: all 0.3s ease !important;
+}
+
+.ld-item-list-section:hover,
+.ld-course-section:hover {
+    border-color: #2f2f92 !important;
+    box-shadow: 0 8px 25px rgba(47, 47, 146, 0.15) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* FORCE SECTION HEADERS */
+.ld-item-list-section-heading,
+.ld-section-heading,
+.ld-course-section-heading {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%) !important;
+    padding: 2rem !important;
+    margin: 0 !important;
+    border: none !important;
+    border-bottom: 2px solid #e2e8f0 !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+}
+
+.ld-item-list-section-heading:hover,
+.ld-section-heading:hover {
+    background: linear-gradient(135deg, #2f2f92 0%, #4c51bf 100%) !important;
+    color: white !important;
+}
+
+/* FORCE SECTION TITLES */
+.ld-item-list-section-heading h3,
+.ld-section-heading h3,
+.ld-section-heading .ld-section-heading-title,
+.ld-item-list-section-heading .ld-item-list-section-heading-title {
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+    color: #2f2f92 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    text-align: right !important;
+    flex-grow: 1 !important;
+}
+
+.ld-item-list-section-heading:hover h3,
+.ld-section-heading:hover h3,
+.ld-item-list-section-heading:hover .ld-item-list-section-heading-title {
+    color: white !important;
+}
+
+/* FORCE SECTION META INFO */
+.ld-section-meta,
+.ld-item-list-section-meta {
+    display: flex !important;
+    gap: 1rem !important;
+    margin-top: 0.5rem !important;
+    font-size: 0.9rem !important;
+    color: #64748b !important;
+}
+
+.ld-section-meta span,
+.topic-count,
+.quiz-count {
+    background: rgba(255,255,255,0.8) !important;
+    padding: 0.25rem 0.75rem !important;
+    border-radius: 20px !important;
+    font-weight: 600 !important;
+    color: #475569 !important;
+}
+
+/* FORCE EXPAND/COLLAPSE BUTTONS */
+.ld-expand-button,
+.ld-item-list-section-heading::after {
+    content: 'הרחב' !important;
+    background: #2f2f92 !important;
+    color: white !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 20px !important;
+    font-size: 0.9rem !important;
+    font-weight: 600 !important;
+    border: none !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+}
+
+.ld-item-list-section.ld-expanded .ld-expand-button,
+.ld-item-list-section.ld-expanded .ld-item-list-section-heading::after {
+    content: 'צמצם' !important;
+    background: #10b981 !important;
+}
+
+/* FORCE LESSON/TOPIC ITEMS - COMPACT HORIZONTAL LAYOUT */
+.ld-item-list-items,
+.ld-section-items {
+    padding: 1.5rem !important;
+    margin: 0 !important;
+    list-style: none !important;
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+    gap: 1rem !important;
+    background: #f8fafc !important;
+}
+
+.ld-item-list-item,
+.ld-lesson-item,
+.ld-topic-item {
+    padding: 1rem 1.5rem !important;
+    margin: 0 !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    transition: all 0.3s ease !important;
+    background: white !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important;
+    min-height: 60px !important;
+}
+
+.ld-item-list-item:hover,
+.ld-lesson-item:hover,
+.ld-topic-item:hover {
+    background: white !important;
+    border-color: #2f2f92 !important;
+    box-shadow: 0 4px 15px rgba(47, 47, 146, 0.1) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* FORCE ITEM NAMES/TITLES */
+.ld-item-name,
+.ld-lesson-title,
+.ld-topic-title,
+.ld-item-list-item a {
+    font-size: 1.2rem !important;
+    font-weight: 600 !important;
+    color: #2d3748 !important;
+    text-decoration: none !important;
+    flex-grow: 1 !important;
+    text-align: right !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.ld-item-name:hover,
+.ld-lesson-title:hover,
+.ld-topic-title:hover,
+.ld-item-list-item a:hover {
+    color: #2f2f92 !important;
+}
+
+/* FORCE STATUS INDICATORS */
+.ld-status,
+.ld-lesson-status,
+.ld-topic-status {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    font-size: 0.9rem !important;
+    font-weight: 600 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.ld-status.ld-status-complete,
+.ld-status-complete {
+    color: #10b981 !important;
+}
+
+.ld-status.ld-status-complete::before,
+.ld-status-complete::before {
+    content: '✓' !important;
+    background: #10b981 !important;
+    color: white !important;
+    width: 24px !important;
+    height: 24px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 14px !important;
+    font-weight: bold !important;
+    margin-left: 0.5rem !important;
+}
+
+.ld-status.ld-status-incomplete,
+.ld-status-incomplete {
+    color: #f59e0b !important;
+}
+
+.ld-status.ld-status-incomplete::before,
+.ld-status-incomplete::before {
+    content: '○' !important;
+    color: #f59e0b !important;
+    font-size: 18px !important;
+    margin-left: 0.5rem !important;
+}
+
+/* FORCE BUTTONS */
+.ld-button,
+.learndash-button,
+button[class*="ld-"] {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 1rem 2rem !important;
+    border-radius: 50px !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+    text-decoration: none !important;
+    transition: all 0.3s ease !important;
+    margin: 0.5rem !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+    border: none !important;
+    cursor: pointer !important;
+}
+
+.ld-button.ld-button-transparent,
+.ld-button-primary,
+.learndash-button-primary {
+    background: linear-gradient(135deg, #2f2f92 0%, #4c51bf 100%) !important;
+    color: white !important;
+}
+
+.ld-button:hover,
+.learndash-button:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 20px rgba(47, 47, 146, 0.3) !important;
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 768px) {
+    .entry-title,
+    h1.entry-title {
+        font-size: 2rem !important;
+        padding: 1.5rem !important;
+    }
+    
+    .ld-item-list-section-heading {
+        padding: 1.5rem !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 1rem !important;
+    }
+    
+    .ld-item-list-item {
+        padding: 1rem 1.5rem !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 0.5rem !important;
+    }
+    
+    .ld-button {
+        width: 100% !important;
+        margin: 0.25rem 0 !important;
+    }
+}
+
+/* HIDE UNWANTED ELEMENTS */
+.ld-course-navigation .ld-lesson-complete,
+.ld-focus-comments,
+.ld-breadcrumbs {
+    display: none !important;
+}
+
+/* FORCE RTL ALIGNMENT */
+* {
+    text-align: right !important;
+    direction: rtl !important;
+}
