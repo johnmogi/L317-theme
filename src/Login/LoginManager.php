@@ -198,10 +198,35 @@ class LoginManager {
     /**
      * Get the appropriate redirect URL based on user role
      */
+    /**
+     * Get redirect URL for users based on their enrolled courses
+     * 
+     * @param WP_User $user The logged-in user object
+     * @return string The redirect URL
+     */
     private function get_redirect_url($user) {
         // Default to home page
         $redirect_url = home_url();
         $roles = (array) $user->roles;
+        
+        // Check if LearnDash is active
+        if (function_exists('learndash_user_get_enrolled_courses')) {
+            // Get all enrolled courses for the user
+            $course_ids = learndash_user_get_enrolled_courses($user->ID, array(), true);
+            
+            if (!empty($course_ids)) {
+                // Sort course IDs to get the lowest one
+                sort($course_ids, SORT_NUMERIC);
+                $lowest_course_id = $course_ids[0];
+                $course_url = get_permalink($lowest_course_id);
+                
+                if ($course_url) {
+                    return $course_url;
+                }
+            }
+        }
+        
+        // Fallback to role-based redirects if no courses found or LearnDash not active
         
         // Students
         if (in_array('school_student', $roles)) {
@@ -211,7 +236,6 @@ class LoginManager {
                 $redirect_url = get_permalink(get_option('lilac_school_course_page', 0)) ?: home_url('/my-courses/');
             }
         }
-        
         // Private Students / Clients
         elseif (in_array('student_private', $roles)) {
             $redirect_url = get_permalink(get_option('lilac_private_student_dashboard_page', 0));
@@ -220,7 +244,6 @@ class LoginManager {
                 $redirect_url = get_permalink(get_option('lilac_private_course_page', 0)) ?: home_url('/my-courses/');
             }
         }
-        
         // Teachers
         elseif (in_array('school_teacher', $roles)) {
             // Direct teachers to the admin dashboard page instead of frontend
