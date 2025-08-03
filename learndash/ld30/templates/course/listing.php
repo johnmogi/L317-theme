@@ -1,27 +1,24 @@
 <?php
 /**
- * LILAC Custom LearnDash Course Listing - Modern Card Layout
- * Completely redesigned to eliminate accordion/nested structure
- *
- * DEBUG: This is the custom template file being used
+ * LILAC Custom LearnDash Course Listing - FLAT LIST STRUCTURE
+ * Outputs a simple, flat list without any nesting or accordion behavior
  */
 
-// Debug information
 if (!defined('ABSPATH')) {
     exit;
 }
 
-// Add a very visible debug marker
-add_action('wp_footer', function() {
-    echo '<!-- LILAC DEBUG: Custom LearnDash Template Loaded -->';
-    echo '<style>#lilac-debug { position: fixed; bottom: 0; left: 0; right: 0; background: #ff0000; color: white; padding: 10px; text-align: center; z-index: 9999; }</style>';
-    echo '<div id="lilac-debug">LILAC CUSTOM TEMPLATE LOADED: ' . esc_html(__FILE__) . '</div>';
-});
+// Debug marker
+echo '<!-- LILAC FLAT LIST TEMPLATE LOADED -->';
 
-// Log template loading
-if (function_exists('error_log')) {
-    error_log('LILAC: Loading custom template: ' . __FILE__);
-}
+// Get course data
+global $course_pager_results, $post;
+$course_id = $post->ID;
+$user_id = get_current_user_id();
+
+// Get all lessons for this course
+$lessons = learndash_get_course_lessons_list($course_id, $user_id);
+$quizzes = learndash_get_course_quiz_list($course_id, $user_id);
 
 /**
  * Available Variables:

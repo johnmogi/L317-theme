@@ -1,0 +1,107 @@
+/**
+ * LearnDash Ultra-Simple Flat Design
+ * Starting completely fresh - focus on straight, flat list items only
+ */
+
+/* Reset everything to be completely flat */
+.ld-item-list,
+.ld-item-list-items,
+.ld-item-list-section,
+.ld-item-list-item {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    background: none !important;
+    list-style: none !important;
+    text-indent: 0 !important;
+    position: static !important;
+    left: auto !important;
+    right: auto !important;
+    transform: none !important;
+}
+
+/* Make the main container simple */
+.ld-item-list {
+    background: white !important;
+    border: 1px solid #ddd !important;
+    margin-bottom: 20px !important;
+}
+
+/* Section headers - simple and clean */
+.ld-item-list-section-heading {
+    background: #f5f5f5 !important;
+    color: #2C3391 !important;
+    padding: 15px 20px !important;
+    font-weight: 600 !important;
+    border-bottom: 1px solid #ddd !important;
+    text-align: right !important;
+    direction: rtl !important;
+}
+
+/* Individual items - completely flat, no indentation */
+.ld-item-list-item {
+    padding: 15px 20px !important;
+    border-bottom: 1px solid #eee !important;
+    background: white !important;
+    text-align: right !important;
+    direction: rtl !important;
+    display: block !important;
+}
+
+.ld-item-list-item:hover {
+    background: #f9f9f9 !important;
+}
+
+/* Item text */
+.ld-item-name {
+    color: #333 !important;
+    font-size: 16px !important;
+    text-decoration: none !important;
+    display: block !important;
+    text-align: right !important;
+    direction: rtl !important;
+}
+
+.ld-item-name:hover {
+    color: #2C3391 !important;
+}
+
+/* Remove ALL accordion behavior */
+.ld-item-list-section-heading::after,
+.ld-item-list-section-heading::before {
+    display: none !important;
+}
+
+/* Force all items to be visible and flat */
+.ld-item-list-section .ld-item-list-items {
+    display: block !important;
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+/* Remove any nesting styles */
+.ld-item-list-section {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Global font and direction */
+body.single-sfwd-courses {
+    font-family: 'Assistant', sans-serif !important;
+    direction: rtl !important;
+}
+
+/* Simple course header */
+.ld-course-header {
+    background: #2C3391 !important;
+    color: white !important;
+    padding: 30px 20px !important;
+    text-align: right !important;
+    margin-bottom: 20px !important;
+}
+
+.ld-course-header h1 {
+    color: white !important;
+    font-size: 2rem !important;
+    margin: 0 !important;
+}
