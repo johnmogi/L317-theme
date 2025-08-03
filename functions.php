@@ -19,7 +19,6 @@ add_filter('learndash_template', function($filepath, $name, $args, $echo, $retur
     if ('course/listing.php' === $name) {
         $custom_template = get_stylesheet_directory() . '/learndash/ld30/templates/course/listing-flat.php';
         if (file_exists($custom_template)) {
-            error_log('LILAC: Using FLAT LIST template: ' . $custom_template);
             return $custom_template;
         }
     }
@@ -47,7 +46,6 @@ add_action('learndash-course-content-list-after', function() {
     $flat_template = get_stylesheet_directory() . '/learndash/ld30/templates/course/listing-flat.php';
     if (file_exists($flat_template)) {
         include $flat_template;
-        error_log('LILAC: Loaded flat template via content hook');
     } else {
         echo $content; // Fallback to original content
     }
@@ -59,15 +57,6 @@ add_filter('learndash_template', function($filepath, $name, $args, $echo, $retur
     if ('course/listing.php' === $name) {
         $custom_template = get_stylesheet_directory() . '/learndash/ld30/templates/course/listing.php';
         if (file_exists($custom_template)) {
-            // Log that we're using our custom template
-            error_log('LILAC: Using custom template: ' . $custom_template);
-            
-            // Add a debug marker to the page
-            add_action('wp_footer', function() use ($custom_template) {
-                echo '<!-- LILAC DEBUG: Using custom template: ' . esc_html($custom_template) . ' -->';
-                echo '<style>#lilac-debug { position: fixed; bottom: 0; left: 0; right: 0; background: #ff0000; color: white; padding: 10px; text-align: center; z-index: 9999; }</style>';
-                echo '<div id="lilac-debug">LILAC CUSTOM TEMPLATE: ' . esc_html($custom_template) . '</div>';
-            });
             
             return $custom_template;
         }
@@ -1242,17 +1231,72 @@ function enqueue_learndash_clean_start() {
             );
             
             // Enqueue session dialog dismissal JS
-            wp_enqueue_script(
-                'dismiss-session-dialog',
-                get_stylesheet_directory_uri() . '/assets/js/dismiss-session-dialog.js',
-                array(),
-                '1.0.0',
-                true
-            );
+            add_action('wp_enqueue_scripts', function() {
+                if (is_singular('sfwd-courses')) {
+                    wp_enqueue_script(
+                        'dismiss-session-dialog',
+                        get_stylesheet_directory_uri() . '/assets/js/dismiss-session-dialog.js',
+                        array('jquery'),
+                        '1.0',
+                        true
+                    );
+                }
+            });
         }
     }
 }
 add_action('wp_enqueue_scripts', 'enqueue_learndash_clean_start', 100);
+
+// Fix translation loading order to prevent header warnings
+add_action('after_setup_theme', function() {
+    // Load text domains properly to avoid early loading warnings
+    load_theme_textdomain('hello-theme-child-master', get_stylesheet_directory() . '/languages');
+}, 1);
+
+// Performance optimization for LearnDash course pages
+add_action('init', function() {
+    // Increase memory limit for course pages specifically
+    if (is_admin() || (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/courses/') !== false)) {
+        ini_set('memory_limit', '512M');
+    }
+}, 1);
+
+// Optimize LearnDash queries to reduce memory usage
+add_filter('learndash_course_steps_query_args', function($query_args, $course_id) {
+    // Limit the number of posts per query to reduce memory usage
+    $query_args['posts_per_page'] = 50;
+    $query_args['no_found_rows'] = true; // Skip counting total posts
+    $query_args['update_post_meta_cache'] = false; // Skip meta cache
+    $query_args['update_post_term_cache'] = false; // Skip term cache
+    return $query_args;
+}, 10, 2);
+
+// Disable unnecessary LearnDash features that consume memory
+add_filter('learndash_course_navigation_admin_pager', '__return_false');
+add_filter('learndash_lesson_navigation_admin_pager', '__return_false');
+
+// Optimize database queries for course content
+add_action('pre_get_posts', function($query) {
+    if (!is_admin() && $query->is_main_query() && is_singular('sfwd-courses')) {
+        // Reduce the number of meta queries
+        $query->set('meta_query', array());
+        $query->set('no_found_rows', true);
+        $query->set('update_post_meta_cache', false);
+        $query->set('update_post_term_cache', false);
+    }
+});
+
+// Memory usage monitoring (for debugging)
+if (defined('WP_DEBUG') && WP_DEBUG) {
+    add_action('wp_footer', function() {
+        if (is_singular('sfwd-courses')) {
+            $memory_usage = memory_get_peak_usage(true);
+            $memory_limit = ini_get('memory_limit');
+            error_log("Course page memory usage: " . round($memory_usage / 1024 / 1024, 2) . "MB / Limit: $memory_limit");
+        }
+    });
+}
+
 // Load other theme files
 require_once get_stylesheet_directory() . '/inc/shortcodes/loader.php';
 require_once get_stylesheet_directory() . '/includes/ld30-styles.php';

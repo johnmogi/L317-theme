@@ -70,7 +70,7 @@ body.single-sfwd-courses .ld-accordion__item--lesson {
 body.single-sfwd-courses .ld-accordion__item-header--lesson {
     background: #2C3391 !important;
     color: white !important;
-    padding: 18px 20px !important;
+    padding: 22px 25px !important;
     text-align: right !important;
     direction: rtl !important;
     border-radius: 4px 4px 0 0 !important;
@@ -104,7 +104,7 @@ body.single-sfwd-courses .ld-accordion__item--topic {
 }
 
 body.single-sfwd-courses .ld-accordion__item-header--topic {
-    padding: 15px 20px !important;
+    padding: 18px 25px !important;
     background: #f8f9fa !important;
     text-align: right !important;
     direction: rtl !important;
@@ -372,7 +372,7 @@ body.single-sfwd-courses .ld-accordion__item--topic-quiz {
 body.single-sfwd-courses .ld-accordion__item-header--topic-quiz {
     background: #f0f4ff !important;
     color: #6c757d !important;
-    padding: 15px 25px !important;
+    padding: 18px 28px !important;
     border-bottom: 1px solid #e9ecef !important;
 }
 
