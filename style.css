@@ -593,3 +593,118 @@ body.single-sfwd-topic.rtl .ld-accordion__item {
         margin-top: 2rem;
     }
 }
+
+
+
+/* Course Page Lesson List Improvements */
+
+/* Main lesson item styling */
+.ld-item-list-item.ld-item-lesson-item {
+    margin-bottom: 1rem !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 6px !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+}
+
+/* Lesson item preview (main clickable area) */
+.ld-item-list-item-preview {
+    padding: 1rem !important;
+    border-radius: 8px 8px 0 0 !important;
+}
+
+/* Lesson title styling */
+.ld-item-list-item .ld-item-title {
+    font-size: 1.1rem !important;
+    font-weight: 600 !important;
+    color: #1f2937 !important;
+    margin-bottom: 0.5rem !important;
+}
+
+/* Lesson components (topics/quizzes count) */
+.ld-item-components {
+    font-size: 0.85rem !important;
+    color: #6b7280 !important;
+    margin-top: 0.25rem !important;
+}
+
+/* Expand button styling */
+.ld-expand-button {
+    background: #2C3391 !important;
+    color: white !important;
+    border: none !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 6px !important;
+    font-size: 0.85rem !important;
+    margin-top: 0.5rem !important;
+}
+
+.ld-expand-button:hover {
+    background: #1e2875 !important;
+}
+
+/* Status icons */
+.ld-status-icon {
+    width: 20px !important;
+    height: 20px !important;
+    margin-left: 0.75rem !important;
+}
+
+/* Expanded content area */
+.ld-item-list-item-expanded {
+    border-top: 1px solid #e5e7eb !important;
+    background: #f9fafb !important;
+}
+
+/* Topic/Quiz items within lessons */
+.ld-table-list-item {
+    padding: 0.75rem 1rem !important;
+    border-bottom: 1px solid #e5e7eb !important;
+    background: white !important;
+    margin-bottom: 0 !important;
+}
+
+.ld-table-list-item:last-child {
+    border-bottom: none !important;
+}
+
+/* Topic titles */
+.ld-topic-title {
+    font-size: 0.95rem !important;
+    color: #374151 !important;
+    font-weight: 500 !important;
+}
+
+/* Quiz items special styling */
+.ld-table-list-item-quiz {
+    background: white !important;
+    border-left: 3px solid #2C3391 !important;
+}
+
+/* Quiz icons */
+.ld-quiz-incomplete .ld-icon-quiz {
+    color: #2C3391 !important;
+}
+
+/* Progress indicators */
+.ld-lesson-list-progress,
+.ld-lesson-list-steps {
+    font-size: 0.8rem !important;
+    color: #6b7280 !important;
+}
+
+/* Course page responsive adjustments */
+@media (max-width: 768px) {
+    .ld-item-list-item .ld-item-title {
+        font-size: 1rem !important;
+    }
+    
+    .ld-item-components {
+        font-size: 0.8rem !important;
+    }
+    
+    .ld-expand-button {
+        font-size: 0.8rem !important;
+        padding: 0.4rem 0.8rem !important;
+    }
+}

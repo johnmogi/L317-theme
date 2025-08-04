@@ -1155,6 +1155,22 @@ function enqueue_progress_bar_styles() {
 add_action('wp_enqueue_scripts', 'enqueue_progress_bar_styles', 99);
 
 /**
+ * Enqueue Two-Column LearnDash Layout CSS
+ */
+function enqueue_learndash_two_column_layout() {
+    // Only load on LearnDash course pages
+    if (is_singular('sfwd-courses')) {
+        wp_enqueue_style(
+            'learndash-two-column-layout',
+            get_stylesheet_directory_uri() . '/assets/css/learndash-two-column-layout.css',
+            array(),
+            '1.0.0'
+        );
+    }
+}
+add_action('wp_enqueue_scripts', 'enqueue_learndash_two_column_layout', 100);
+
+/**
  * CLEAN START - LearnDash Ultra-Flat Design Only
  * DISABLED - Restoring default LearnDash styling
  */
