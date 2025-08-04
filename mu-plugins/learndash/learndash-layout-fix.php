@@ -20,9 +20,9 @@ class LearnDash_Layout_Fix {
     }
     
     private function __construct() {
-        // Add custom CSS for LearnDash layout
-        add_action('wp_enqueue_scripts', array($this, 'enqueue_layout_styles'));
-        add_action('admin_enqueue_scripts', array($this, 'enqueue_layout_styles'));
+        // DISABLED: Add custom CSS for LearnDash layout
+        // add_action('wp_enqueue_scripts', array($this, 'enqueue_layout_styles'));
+        // add_action('admin_enqueue_scripts', array($this, 'enqueue_layout_styles'));
     }
     
     /**

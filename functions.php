@@ -1156,7 +1156,9 @@ add_action('wp_enqueue_scripts', 'enqueue_progress_bar_styles', 99);
 
 /**
  * CLEAN START - LearnDash Ultra-Flat Design Only
+ * DISABLED - Restoring default LearnDash styling
  */
+/*
 function enqueue_learndash_clean_start() {
     // Only load on LearnDash pages
     if (is_singular(['sfwd-courses', 'sfwd-lessons', 'sfwd-topic'])) {
@@ -1195,6 +1197,7 @@ function enqueue_learndash_clean_start() {
     }
 }
 add_action('wp_enqueue_scripts', 'enqueue_learndash_clean_start', 100);
+*/
 
 // Fix translation loading order to prevent header warnings
 add_action('after_setup_theme', function() {
@@ -1248,7 +1251,7 @@ if (defined('WP_DEBUG') && WP_DEBUG) {
 
 // Load other theme files
 require_once get_stylesheet_directory() . '/inc/shortcodes/loader.php';
-require_once get_stylesheet_directory() . '/includes/ld30-styles.php';
+// require_once get_stylesheet_directory() . '/includes/ld30-styles.php'; // DISABLED - Restoring default LearnDash styling
 
 // Load YITH status check (admin only)
 if (is_admin()) {

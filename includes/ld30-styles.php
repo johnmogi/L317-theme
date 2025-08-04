@@ -1,7 +1,9 @@
 <?php
 /**
  * Enqueue custom styles for LearnDash LD30 theme
+ * DISABLED - Restoring default LearnDash LD30 styling
  */
+/*
 function enqueue_ld30_styles() {
     if (function_exists('learndash_get_post_type')) {
         $post_type = learndash_get_post_type();
@@ -48,4 +50,5 @@ function enqueue_ld30_styles() {
         }
     }
 }
-add_action('wp_enqueue_scripts', 'enqueue_ld30_styles', 999); // High priority to override Elementor
+*/
+// add_action('wp_enqueue_scripts', 'enqueue_ld30_styles', 999); // DISABLED - High priority to override Elementor
