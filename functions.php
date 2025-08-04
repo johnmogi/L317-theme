@@ -5,91 +5,40 @@
  * @package Lilac
  */
 
-// Debug LearnDash template loading
-add_action('template_include', function($template) {
-    if (is_singular('sfwd-courses')) {
-        error_log('Current template being loaded: ' . $template);
-        error_log('Trying to load custom template...');
-    }
-    return $template;
-}, 9999);
+// Optimized LearnDash template override - Single efficient filter
+add_filter('learndash_template', 'lilac_override_learndash_templates', 10, 5);
 
-// AGGRESSIVE template override for LearnDash - Multiple methods to force flat template
-add_filter('learndash_template', function($filepath, $name, $args, $echo, $return_file_path) {
-    if ('course/listing.php' === $name) {
-        $custom_template = get_stylesheet_directory() . '/learndash/ld30/templates/course/listing-flat.php';
-        if (file_exists($custom_template)) {
-            return $custom_template;
-        }
-    }
-    return $filepath;
-}, 9999, 5);
-
-// Alternative method: Override the template path directly
-add_filter('learndash_template_filename', function($template_name, $name, $args, $echo, $return_file_path) {
-    if ('course/listing.php' === $name) {
-        return 'course/listing-flat.php';
-    }
-    return $template_name;
-}, 9999, 5);
-
-// Hook into the course content output directly
-add_action('learndash-course-content-list-before', function() {
-    // Capture and replace the output
-    ob_start();
-});
-
-add_action('learndash-course-content-list-after', function() {
-    $content = ob_get_clean();
+/**
+ * Efficiently override LearnDash templates without redundant file checks
+ * Uses cached template paths for better performance
+ */
+function lilac_override_learndash_templates($filepath, $name, $args, $echo, $return_file_path) {
+    // Static cache to avoid repeated file_exists() calls
+    static $template_cache = array();
     
-    // Load our flat template instead
-    $flat_template = get_stylesheet_directory() . '/learndash/ld30/templates/course/listing-flat.php';
-    if (file_exists($flat_template)) {
-        include $flat_template;
-    } else {
-        echo $content; // Fallback to original content
-    }
-});
-
-// Completely override the LearnDash template loading system
-add_filter('learndash_template', function($filepath, $name, $args, $echo, $return_file_path) {
-    // Only override the course listing template
-    if ('course/listing.php' === $name) {
-        $custom_template = get_stylesheet_directory() . '/learndash/ld30/templates/course/listing.php';
-        if (file_exists($custom_template)) {
-            
-            return $custom_template;
+    // Define template overrides
+    $template_overrides = array(
+        'course/listing.php' => '/learndash/ld30/templates/course/listing-flat.php'
+    );
+    
+    // Check if we have an override for this template
+    if (isset($template_overrides[$name])) {
+        // Use cached result if available
+        if (!isset($template_cache[$name])) {
+            $custom_template = get_stylesheet_directory() . $template_overrides[$name];
+            $template_cache[$name] = file_exists($custom_template) ? $custom_template : false;
+        }
+        
+        // Return cached template path if it exists
+        if ($template_cache[$name]) {
+            return $template_cache[$name];
         }
     }
+    
     return $filepath;
-}, 9999, 5);
+}
 
-// Force LearnDash to use our template directory first
-add_filter('learndash_template_paths', function($paths) {
-    $custom_path = get_stylesheet_directory() . '/learndash/ld30/templates';
-    if (file_exists($custom_path)) {
-        array_unshift($paths, $custom_path);
-        error_log('LILAC: Added custom template path: ' . $custom_path);
-    }
-    return $paths;
-}, 9999);
-
-// Debug: Log when our template is being loaded
-add_action('template_redirect', function() {
-    if (is_singular('sfwd-courses') || is_post_type_archive('sfwd-courses')) {
-        error_log('LILAC: Course page loaded - checking template');
-        error_log('LILAC: Theme directory: ' . get_stylesheet_directory());
-        
-        // Check if our custom template exists
-        $custom_template = get_stylesheet_directory() . '/learndash/ld30/templates/course/listing.php';
-        error_log('LILAC: Custom template exists: ' . (file_exists($custom_template) ? 'YES' : 'NO'));
-        
-        // Log the current template hierarchy
-        if (function_exists('get_page_template_slug')) {
-            error_log('LILAC: Page template slug: ' . get_page_template_slug());
-        }
-    }
-});
+// Template debugging removed for performance - enable only when needed for troubleshooting
 
 // Fix for LearnDash WooCommerce translation loading issue
 add_action('init', function() {

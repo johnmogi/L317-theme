@@ -100,6 +100,96 @@ class User_Dashboard_Shortcode {
     }
 
     /**
+     * Get user's LearnDash course access expiration information
+     *
+     * @return array|false Array with expiration info or false if no access found
+     */
+    private function get_user_course_access_info() {
+        if (!is_user_logged_in()) {
+            return false;
+        }
+
+        $current_user = wp_get_current_user();
+        $user_id = $current_user->ID;
+        $user_meta = get_user_meta($user_id);
+        $access_info = [];
+        $earliest_expiration = null;
+        $has_permanent_access = false;
+
+        // Check for course access expiration dates from our WC LearnDash Access Manager
+        foreach ($user_meta as $key => $value) {
+            if (preg_match('/^course_(\d+)_access_expires$/', $key, $matches)) {
+                $course_id = $matches[1];
+                $expires_timestamp = $value[0];
+                $course_title = get_the_title($course_id);
+                
+                if ($expires_timestamp && $expires_timestamp > 0) {
+                    $access_info[] = [
+                        'course_id' => $course_id,
+                        'course_title' => $course_title,
+                        'expires' => $expires_timestamp,
+                        'expires_formatted' => date('d/m/Y H:i', $expires_timestamp),
+                        'is_expired' => $expires_timestamp < current_time('timestamp'),
+                        'days_remaining' => ceil(($expires_timestamp - current_time('timestamp')) / DAY_IN_SECONDS)
+                    ];
+                    
+                    // Track earliest expiration for summary display
+                    if ($earliest_expiration === null || $expires_timestamp < $earliest_expiration) {
+                        $earliest_expiration = $expires_timestamp;
+                    }
+                } else {
+                    // Course has permanent access
+                    $has_permanent_access = true;
+                    $access_info[] = [
+                        'course_id' => $course_id,
+                        'course_title' => $course_title,
+                        'expires' => 0,
+                        'expires_formatted' => 'ללא תפוגה',
+                        'is_expired' => false,
+                        'days_remaining' => 999999
+                    ];
+                }
+            }
+        }
+
+        if (empty($access_info)) {
+            return false;
+        }
+
+        // Prepare summary information
+        $summary = [];
+        if ($has_permanent_access && $earliest_expiration === null) {
+            $summary['status'] = 'permanent';
+            $summary['text'] = 'גישה קבועה';
+            $summary['icon'] = '♾️';
+            $summary['class'] = 'permanent-access';
+        } elseif ($earliest_expiration && $earliest_expiration > current_time('timestamp')) {
+            $days_remaining = ceil(($earliest_expiration - current_time('timestamp')) / DAY_IN_SECONDS);
+            $summary['status'] = 'active';
+            $summary['text'] = 'מנוי עד ' . date('d/m/Y', $earliest_expiration);
+            $summary['icon'] = '⏰';
+            $summary['class'] = 'active-subscription';
+            $summary['days_remaining'] = $days_remaining;
+            
+            if ($days_remaining <= 7) {
+                $summary['class'] = 'expiring-soon';
+                $summary['icon'] = '⚠️';
+            }
+        } else {
+            $summary['status'] = 'expired';
+            $summary['text'] = 'המנוי פג תוקף';
+            $summary['icon'] = '❌';
+            $summary['class'] = 'expired-subscription';
+        }
+
+        return [
+            'courses' => $access_info,
+            'summary' => $summary,
+            'has_access' => !empty($access_info)
+        ];
+    }
+
+    /**
      * Get current date in format dd/mm/yyyy
      */
     private function get_current_date() {
@@ -217,6 +307,16 @@ class User_Dashboard_Shortcode {
                                 <span class="meta-icon">🎯</span>
                                 <span class="meta-text"><?php echo esc_html($atts['track_name']); ?></span>
                             </div>
+                            <?php 
+                            // Display LearnDash course access information
+                            $access_info = $this->get_user_course_access_info();
+                            if ($access_info && $access_info['has_access']) :
+                            ?>
+                            <div class="meta-item subscription-status <?php echo esc_attr($access_info['summary']['class']); ?>">
+                                <span class="meta-icon"><?php echo $access_info['summary']['icon']; ?></span>
+                                <span class="meta-text"><?php echo esc_html($access_info['summary']['text']); ?></span>
+                            </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <div class="user-actions">

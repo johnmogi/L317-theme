@@ -181,14 +181,75 @@
 .meta-item {
     display: flex;
     align-items: center;
-    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
     color: #5a5c69;
 }
 
 .meta-icon {
     margin-left: 0.5rem;
     font-size: 1rem;
-    color: #b7b9cc;
+}
+
+.meta-text {
+    font-weight: 500;
+}
+
+/* Subscription Status Styles */
+.meta-item.subscription-status {
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin-top: 8px;
+    font-weight: 600;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.meta-item.active-subscription {
+    background: linear-gradient(135deg, #e8f5e8, #f0f8f0);
+    color: #155724;
+    border-color: #28a745;
+}
+
+.meta-item.active-subscription .meta-icon {
+    color: #28a745;
+}
+
+.meta-item.expiring-soon {
+    background: linear-gradient(135deg, #fff3cd, #fef9e7);
+    color: #856404;
+    border-color: #ffc107;
+    animation: pulse-warning 2s infinite;
+}
+
+.meta-item.expiring-soon .meta-icon {
+    color: #ffc107;
+}
+
+.meta-item.expired-subscription {
+    background: linear-gradient(135deg, #f8d7da, #fce4e6);
+    color: #721c24;
+    border-color: #dc3545;
+}
+
+.meta-item.expired-subscription .meta-icon {
+    color: #dc3545;
+}
+
+.meta-item.permanent-access {
+    background: linear-gradient(135deg, #d1ecf1, #e2f3f5);
+    color: #0c5460;
+    border-color: #17a2b8;
+}
+
+.meta-item.permanent-access .meta-icon {
+    color: #17a2b8;
+}
+
+@keyframes pulse-warning {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
 }
 
 /* User Actions */
