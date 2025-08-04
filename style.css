@@ -25,6 +25,398 @@ Tags: flexible-header, custom-colors, custom-menu, custom-logo, editor-style, fe
  * Custom styles specific to this child theme
  */
 
+/* LearnDash LD30 Visual Improvements - Enhanced Specificity */
+
+/* Course/Lesson Header Enhancement - Flat Navy Blue */
+body.single-sfwd-courses .ld-course-header,
+body.single-sfwd-lessons .ld-course-header,
+body.single-sfwd-topic .ld-course-header {
+    background: #2C3391 !important;
+    border-radius: 8px !important;
+    margin-bottom: 2rem !important;
+    box-shadow: 0 2px 4px rgba(44, 51, 145, 0.1) !important;
+    padding: 2rem !important;
+}
+
+/* Progress Bar Enhancement */
+body.single-sfwd-courses .ld-progress,
+body.single-sfwd-lessons .ld-progress,
+body.single-sfwd-topic .ld-progress {
+    margin: 1.5rem 0 !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-radius: 20px !important;
+    height: 8px !important;
+}
+
+body.single-sfwd-courses .ld-progress-bar,
+body.single-sfwd-lessons .ld-progress-bar,
+body.single-sfwd-topic .ld-progress-bar {
+    background: #4ade80 !important;
+    border-radius: 20px !important;
+    transition: width 0.5s ease !important;
+}
+
+/* Course Content Container - High Specificity */
+body.single-sfwd-courses .ld-course-content,
+body.single-sfwd-lessons .ld-course-content,
+body.single-sfwd-topic .ld-course-content,
+body.single-sfwd-courses .learndash-wrapper,
+body.single-sfwd-lessons .learndash-wrapper,
+body.single-sfwd-topic .learndash-wrapper {
+    background: white !important;
+    border-radius: 8px !important;
+    padding: 2rem !important;
+    margin-bottom: 2rem !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+    border: 1px solid #e2e8f0 !important;
+}
+
+/* Lesson Items Visual Enhancement - Maximum Specificity */
+body.single-sfwd-courses .ld-accordion__item,
+body.single-sfwd-lessons .ld-accordion__item,
+body.single-sfwd-topic .ld-accordion__item {
+    margin-bottom: 1rem !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+    border: 1px solid #e2e8f0 !important;
+    background: white !important;
+}
+
+/* Lesson Headers - Maximum Specificity */
+body.single-sfwd-courses .ld-accordion__item-header--lesson,
+body.single-sfwd-lessons .ld-accordion__item-header--lesson,
+body.single-sfwd-topic .ld-accordion__item-header--lesson {
+    background: #f8fafc !important;
+    border-bottom: 2px solid #2C3391 !important;
+    padding: 1.2rem !important;
+}
+
+body.single-sfwd-courses .ld-accordion__item-title--lesson,
+body.single-sfwd-lessons .ld-accordion__item-title--lesson,
+body.single-sfwd-topic .ld-accordion__item-title--lesson {
+    font-weight: 600 !important;
+    color: #2C3391 !important;
+    font-size: 1.1rem !important;
+}
+
+/* Topic/Quiz Items - Maximum Specificity */
+body.single-sfwd-courses .ld-accordion__item--topic,
+body.single-sfwd-lessons .ld-accordion__item--topic,
+body.single-sfwd-topic .ld-accordion__item--topic,
+body.single-sfwd-courses .ld-accordion__item--topic-quiz,
+body.single-sfwd-lessons .ld-accordion__item--topic-quiz,
+body.single-sfwd-topic .ld-accordion__item--topic-quiz {
+    padding: 0.8rem 1.2rem !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    transition: background-color 0.2s ease !important;
+    background: white !important;
+}
+
+body.single-sfwd-courses .ld-accordion__item--topic:hover,
+body.single-sfwd-lessons .ld-accordion__item--topic:hover,
+body.single-sfwd-topic .ld-accordion__item--topic:hover,
+body.single-sfwd-courses .ld-accordion__item--topic-quiz:hover,
+body.single-sfwd-lessons .ld-accordion__item--topic-quiz:hover,
+body.single-sfwd-topic .ld-accordion__item--topic-quiz:hover {
+    background: #f8fafc !important;
+}
+
+/* Status Icons Enhancement */
+body.single-sfwd-courses .ld-status-icon,
+body.single-sfwd-lessons .ld-status-icon,
+body.single-sfwd-topic .ld-status-icon {
+    width: 20px !important;
+    height: 20px !important;
+    border-radius: 50% !important;
+}
+
+/* Lesson Content Area Enhancement */
+body.single-sfwd-lessons .ld-lesson-content,
+body.single-sfwd-topic .ld-lesson-content {
+    background: white !important;
+    border-radius: 8px !important;
+    padding: 2rem !important;
+    margin: 2rem 0 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+    border: 1px solid #e2e8f0 !important;
+}
+
+/* Lesson Table List Enhancement - Target the actual lesson structure */
+body.single-sfwd-lessons .ld-table-list,
+body.single-sfwd-topic .ld-table-list {
+    background: white !important;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+    border: 1px solid #e2e8f0 !important;
+    overflow: hidden !important;
+    margin-bottom: 2rem !important;
+}
+
+/* Table List Header Enhancement - Flat Navy Blue */
+body.single-sfwd-lessons .ld-table-list-header,
+body.single-sfwd-topic .ld-table-list-header {
+    background: #2C3391 !important;
+    padding: 1.5rem !important;
+    color: white !important;
+}
+
+/* Table List Items Container */
+body.single-sfwd-lessons .ld-table-list-items,
+body.single-sfwd-topic .ld-table-list-items {
+    background: white !important;
+    padding: 0 !important;
+}
+
+/* Individual Table List Items */
+body.single-sfwd-lessons .ld-table-list-item,
+body.single-sfwd-topic .ld-table-list-item {
+    border-bottom: 1px solid #f1f5f9 !important;
+    transition: background-color 0.2s ease !important;
+    margin: 0 !important;
+    background: white !important;
+}
+
+body.single-sfwd-lessons .ld-table-list-item:hover,
+body.single-sfwd-topic .ld-table-list-item:hover {
+    background: #f8fafc !important;
+}
+
+/* Table List Item Preview (clickable area) */
+body.single-sfwd-lessons .ld-table-list-item-preview,
+body.single-sfwd-topic .ld-table-list-item-preview {
+    padding: 1rem 1.5rem !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    text-decoration: none !important;
+    color: inherit !important;
+    direction: rtl !important;
+    text-align: right !important;
+}
+
+/* Topic Titles */
+body.single-sfwd-lessons .ld-topic-title,
+body.single-sfwd-topic .ld-topic-title,
+body.single-sfwd-lessons .ld-item-title,
+body.single-sfwd-topic .ld-item-title {
+    font-size: 1.1rem !important;
+    font-weight: 600 !important;
+    color: #2d3748 !important;
+    margin: 0 !important;
+    line-height: 1.4 !important;
+}
+
+/* Status Icons Enhancement for Table List */
+body.single-sfwd-lessons .ld-status-icon,
+body.single-sfwd-topic .ld-status-icon {
+    width: 20px !important;
+    height: 20px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+}
+
+/* Quiz Items in Table List */
+body.single-sfwd-lessons .ld-table-list-item-quiz,
+body.single-sfwd-topic .ld-table-list-item-quiz {
+    background: #f8fafc !important;
+    border-left: 3px solid #2C3391 !important;
+    margin: 0 !important;
+}
+
+/* Content Actions Enhancement */
+body.single-sfwd-lessons .ld-content-actions,
+body.single-sfwd-topic .ld-content-actions {
+    background: white !important;
+    border-radius: 8px !important;
+    padding: 2rem !important;
+    margin: 2rem 0 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+    border: 1px solid #e2e8f0 !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    flex-wrap: wrap !important;
+}
+
+/* RTL Support - High Specificity */
+body.single-sfwd-courses[dir="rtl"] .ld-accordion__item,
+body.single-sfwd-lessons[dir="rtl"] .ld-accordion__item,
+body.single-sfwd-topic[dir="rtl"] .ld-accordion__item,
+body.single-sfwd-courses.rtl .ld-accordion__item,
+body.single-sfwd-lessons.rtl .ld-accordion__item,
+body.single-sfwd-topic.rtl .ld-accordion__item {
+    text-align: right !important;
+    direction: rtl !important;
+}
+
+/* Desktop Sizing Fixes - Prevent Oversized Elements */
+@media (min-width: 1200px) {
+    /* Fix oversized course titles */
+    .elementor-heading-title,
+    h1.entry-title,
+    .ld-course-title {
+        font-size: 1.8rem !important;
+    }
+    
+    /* Fix oversized breadcrumbs and progress text */
+    .ld-breadcrumbs .ld-breadcrumbs-segments,
+    .ld-breadcrumbs .ld-status,
+    .ld-progress-label,
+    .ld-progress-stats {
+        font-size: 0.9rem !important;
+    }
+    
+    /* Fix oversized lesson content */
+    .ld-table-list-header .ld-table-list-title,
+    .ld-lesson-topic-list .ld-table-list-title {
+        font-size: 1.2rem !important;
+    }
+    
+    /* Fix oversized topic/lesson items */
+    .ld-table-list-items,
+    .ld-topic-title,
+    .ld-item-title {
+        font-size: 1rem !important;
+    }
+    
+    /* Fix oversized buttons */
+    .ld-content-actions a,
+    .ld-button,
+    .learndash_mark_complete_button {
+        font-size: 0.9rem !important;
+    }
+    
+    /* Profile Widget Font Size Fixes */
+    .elementor-widget-heading .elementor-heading-title,
+    .profile-widget h1,
+    .profile-widget h2,
+    .profile-widget h3,
+    .profile-widget .elementor-heading-title {
+        font-size: 1.2rem !important;
+    }
+    
+    /* Profile Widget Content */
+    .profile-widget,
+    .profile-widget p,
+    .profile-widget span,
+    .profile-widget div {
+        font-size: 0.9rem !important;
+    }
+    
+    /* Profile Widget Numbers/Stats */
+    .profile-widget .stats,
+    .profile-widget .number,
+    .profile-widget .count {
+        font-size: 1.1rem !important;
+    }
+    
+    /* Override Elementor Viewport Width Units - Aggressive */
+    .elementor-919 .elementor-element.elementor-element-5b10972 .learndash-wrapper .ld-section-heading h2,
+    .elementor-widget-ld-course-content .learndash-wrapper .ld-section-heading h2 {
+        font-size: 1.3rem !important;
+    }
+    
+    .elementor-919 .elementor-element.elementor-element-5b10972 .learndash-wrapper .ld-item-list .ld-item-list-item .ld-item-title,
+    .elementor-widget-ld-course-content .learndash-wrapper .ld-item-list .ld-item-list-item .ld-item-title {
+        font-size: 1rem !important;
+    }
+    
+    .elementor-919 .elementor-element.elementor-element-5b10972 .learndash-wrapper .ld-lesson-list .ld-item-list-items .ld-item-list-item .ld-table-list-header,
+    .elementor-widget-ld-course-content .learndash-wrapper .ld-lesson-list .ld-item-list-items .ld-item-list-item .ld-table-list-header {
+        font-size: 1.1rem !important;
+    }
+    
+    /* Profile Widget Specific Overrides */
+    .elementor-widget-ld-profile .learndash-wrapper #ld-profile .ld-profile-summary .ld-profile-stats .ld-profile-stat > strong,
+    .elementor-widget-ld-profile .learndash-wrapper #ld-profile .ld-profile-summary .ld-profile-stats .ld-profile-stat span {
+        font-size: 1rem !important;
+    }
+    
+    .elementor-widget-ld-profile .learndash-wrapper #ld-profile .ld-section-heading h3,
+    .elementor-widget-ld-profile .learndash-wrapper #ld-profile .ld-course-title {
+        font-size: 1.1rem !important;
+    }
+    
+    .elementor-widget-ld-profile .learndash-wrapper #ld-profile .ld-progress .ld-progress-heading .ld-progress-label,
+    .elementor-widget-ld-profile .learndash-wrapper #ld-profile .ld-progress .ld-progress-heading .ld-progress-percentage,
+    .elementor-widget-ld-profile .learndash-wrapper #ld-profile .ld-progress .ld-progress-heading .ld-progress-steps {
+        font-size: 0.9rem !important;
+    }
+    
+    .elementor-widget-ld-profile .learndash-wrapper #ld-profile .ld-table-list.ld-quiz-list .ld-table-list-header,
+    .elementor-widget-ld-profile .learndash-wrapper #ld-profile .ld-table-list.ld-quiz-list .ld-table-list-item,
+    .elementor-widget-ld-profile .learndash-wrapper #ld-profile .ld-assignment-list .ld-table-list-header,
+    .elementor-widget-ld-profile .learndash-wrapper #ld-profile .ld-assignment-list .ld-table-list-item {
+        font-size: 0.9rem !important;
+    }
+}
+
+/* Tablet Sizing */
+@media (min-width: 769px) and (max-width: 1199px) {
+    /* Moderate sizing for tablets */
+    .elementor-heading-title,
+    h1.entry-title {
+        font-size: 2rem !important;
+    }
+    
+    .ld-breadcrumbs .ld-breadcrumbs-segments,
+    .ld-breadcrumbs .ld-status {
+        font-size: 1rem !important;
+    }
+    
+    .ld-table-list-header .ld-table-list-title {
+        font-size: 1.3rem !important;
+    }
+    
+    .ld-table-list-items,
+    .ld-topic-title {
+        font-size: 1rem !important;
+    }
+}
+
+/* Mobile Responsive Design */
+@media (max-width: 768px) {
+    body.single-sfwd-courses .ld-course-content,
+    body.single-sfwd-lessons .ld-course-content,
+    body.single-sfwd-topic .ld-course-content,
+    body.single-sfwd-courses .learndash-wrapper,
+    body.single-sfwd-lessons .learndash-wrapper,
+    body.single-sfwd-topic .learndash-wrapper {
+        padding: 1rem !important;
+        margin: 1rem 0 !important;
+    }
+    
+    body.single-sfwd-courses .ld-course-header,
+    body.single-sfwd-lessons .ld-course-header,
+    body.single-sfwd-topic .ld-course-header {
+        padding: 1.5rem !important;
+        margin-bottom: 1rem !important;
+    }
+    
+    /* Mobile font sizes */
+    .elementor-heading-title {
+        font-size: 1.8rem !important;
+    }
+    
+    .ld-breadcrumbs .ld-breadcrumbs-segments,
+    .ld-breadcrumbs .ld-status {
+        font-size: 0.9rem !important;
+    }
+    
+    .ld-table-list-header .ld-table-list-title {
+        font-size: 1.2rem !important;
+    }
+    
+    .ld-topic-title {
+        font-size: 1rem !important;
+    }
+}
+
 
 
 
