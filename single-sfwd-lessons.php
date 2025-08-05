@@ -56,9 +56,55 @@ get_header(); ?>
             <!-- LearnDash Content with Video Support -->
             <div class="learndash_content">
                 <?php
-                // Use the processed $content variable like the legacy theme does
-                // This $content variable is already processed by LearnDash's video system
-                echo $content;
+                // Force video display - get lesson video settings directly
+                $lesson_id = get_the_ID();
+                $course_id = learndash_get_course_id($lesson_id);
+                
+                // Get video URL from lesson settings
+                $lesson_settings = learndash_get_setting($lesson_id);
+                $video_url = '';
+                
+                if (!empty($lesson_settings['lesson_video_url'])) {
+                    $video_url = $lesson_settings['lesson_video_url'];
+                } elseif (!empty($lesson_settings['sfwd-lessons_lesson_video_url'])) {
+                    $video_url = $lesson_settings['sfwd-lessons_lesson_video_url'];
+                }
+                
+                // Also check meta fields directly
+                if (empty($video_url)) {
+                    $video_url = get_post_meta($lesson_id, '_sfwd-lessons', true);
+                    if (is_array($video_url) && !empty($video_url['sfwd-lessons_lesson_video_url'])) {
+                        $video_url = $video_url['sfwd-lessons_lesson_video_url'];
+                    } else {
+                        $video_url = get_post_meta($lesson_id, 'lesson_video_url', true);
+                    }
+                }
+                
+                // Display video if found
+                if (!empty($video_url)) {
+                    echo '<div class="ld-video">';
+                    echo '<div class="ld-video-container">';
+                    
+                    // Convert YouTube URL to embed format if needed
+                    if (strpos($video_url, 'youtu.be') !== false || strpos($video_url, 'youtube.com') !== false) {
+                        // Extract video ID
+                        preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/', $video_url, $matches);
+                        if (!empty($matches[1])) {
+                            $video_id = $matches[1];
+                            echo '<iframe width="100%" height="400" src="https://www.youtube.com/embed/' . esc_attr($video_id) . '" frameborder="0" allowfullscreen></iframe>';
+                        }
+                    } else {
+                        // For other video URLs, try direct embed
+                        echo '<video width="100%" height="400" controls><source src="' . esc_url($video_url) . '"></video>';
+                    }
+                    
+                    echo '</div>';
+                    echo '</div>';
+                    echo '<br>';
+                }
+                
+                // Display lesson content
+                the_content();
                 ?>
             </div>
 
@@ -73,8 +119,8 @@ get_header(); ?>
                     echo '<h3 class="lesson-topics-title">נושאים בשיעור</h3>';
                     
                     foreach ( $topics as $topic ) {
-                        $topic_progress = learndash_topic_progress( $topic->ID, get_current_user_id() );
-                        $is_completed = ! empty( $topic_progress ) && $topic_progress['completed'];
+                        // Check if topic is completed using LearnDash function
+                        $is_completed = learndash_is_topic_complete( get_current_user_id(), $topic->ID, $course_id );
                         
                         echo '<div class="ld-item-list-item">';
                         echo '<a href="' . get_permalink( $topic->ID ) . '" class="ld-item-name">';
