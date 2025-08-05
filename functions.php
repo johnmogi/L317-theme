@@ -5,18 +5,18 @@
  * @package Lilac
  */
 
-// Optimized LearnDash template override - Single efficient filter
+// LearnDash template override for course listing only
 add_filter('learndash_template', 'lilac_override_learndash_templates', 10, 5);
 
 /**
- * Efficiently override LearnDash templates without redundant file checks
- * Uses cached template paths for better performance
+ * Override specific LearnDash templates (course listing only)
+ * Main course and lesson templates now use WordPress single post templates
  */
 function lilac_override_learndash_templates($filepath, $name, $args, $echo, $return_file_path) {
     // Static cache to avoid repeated file_exists() calls
     static $template_cache = array();
     
-    // Define template overrides
+    // Define template overrides (only course listing now)
     $template_overrides = array(
         'course/listing.php' => '/learndash/ld30/templates/course/listing-flat.php'
     );
@@ -770,32 +770,11 @@ function custom_override_checkout_fields($fields) {
         'priority'    => 20
     );
     
-    // School Code Section
-    $fields['billing']['school_code'] = array(
-        'type'        => 'text',
-        'label'       => 'קוד בית ספר',
-        'placeholder' => 'הזן קוד בית ספר (אופציונלי)',
-        'required'    => false,
-        'class'       => array('form-row-first'),
-        'priority'    => 30,
-        'clear'       => true
-    );
-    
-    // School Info Section (will be populated via AJAX)
+    // School Info Section (will be populated via AJAX) - keeping for compatibility
     $fields['billing']['school_info'] = array(
         'type'        => 'hidden',
         'class'       => array('school-info-container'),
         'priority'    => 35
-    );
-    
-    // Class Number
-    $fields['billing']['class_number'] = array(
-        'type'        => 'text',
-        'label'       => 'מספר כיתה',
-        'placeholder' => 'מספר הכיתה שלך (אופציונלי)',
-        'required'    => false,
-        'class'       => array('form-row-last'),
-        'priority'    => 40
     );
     
     // Phone and ID Section
@@ -1155,20 +1134,20 @@ function enqueue_progress_bar_styles() {
 add_action('wp_enqueue_scripts', 'enqueue_progress_bar_styles', 99);
 
 /**
- * Enqueue Two-Column LearnDash Layout CSS
+ * Enqueue Clean LearnDash Two-Column Layout CSS - SINGLE FILE ONLY
  */
-function enqueue_learndash_two_column_layout() {
-    // Only load on LearnDash course pages
-    if (is_singular('sfwd-courses')) {
+function enqueue_learndash_clean_layout() {
+    // Load on LearnDash course, lesson, and topic pages
+    if (is_singular(['sfwd-courses', 'sfwd-lessons', 'sfwd-topic'])) {
         wp_enqueue_style(
-            'learndash-two-column-layout',
-            get_stylesheet_directory_uri() . '/assets/css/learndash-two-column-layout.css',
+            'learndash-clean-two-column',
+            get_stylesheet_directory_uri() . '/assets/css/learndash-clean-two-column.css',
             array(),
-            '1.0.0'
+            '3.0.0'
         );
     }
 }
-add_action('wp_enqueue_scripts', 'enqueue_learndash_two_column_layout', 100);
+add_action('wp_enqueue_scripts', 'enqueue_learndash_clean_layout', 100);
 
 /**
  * CLEAN START - LearnDash Ultra-Flat Design Only
@@ -3689,19 +3668,69 @@ function force_country_to_israel($data) {
     return $data;
 }
 
-// Align school code and class number fields in the same row
+// Customize checkout fields - remove unwanted fields and convert labels to placeholders
 add_filter('woocommerce_checkout_fields', 'fix_checkout_fields_alignment');
 function fix_checkout_fields_alignment($fields) {
 
-    // Ensure school fields are side-by-side
-    if (isset($fields['billing']['school_code'])) {
-        $fields['billing']['school_code']['class'] = array('form-row-first');
-        $fields['billing']['school_code']['priority'] = 31;
+    // Remove unwanted fields
+    unset($fields['billing']['billing_postcode']); // Remove postcode field
+    
+    // Convert labels to placeholders for cleaner look
+    if (isset($fields['billing']['billing_first_name'])) {
+        $fields['billing']['billing_first_name']['placeholder'] = $fields['billing']['billing_first_name']['label'] . (isset($fields['billing']['billing_first_name']['required']) && $fields['billing']['billing_first_name']['required'] ? ' *' : '');
+        $fields['billing']['billing_first_name']['label'] = '';
     }
-
-    if (isset($fields['billing']['class_number'])) {
-        $fields['billing']['class_number']['class'] = array('form-row-last');
-        $fields['billing']['class_number']['priority'] = 32;
+    
+    // Handle custom ID fields
+    if (isset($fields['billing']['id_number'])) {
+        $fields['billing']['id_number']['placeholder'] = $fields['billing']['id_number']['label'] . (isset($fields['billing']['id_number']['required']) && $fields['billing']['id_number']['required'] ? ' *' : '');
+        $fields['billing']['id_number']['label'] = '';
+    }
+    
+    if (isset($fields['billing']['id_confirm'])) {
+        $fields['billing']['id_confirm']['placeholder'] = $fields['billing']['id_confirm']['label'] . (isset($fields['billing']['id_confirm']['required']) && $fields['billing']['id_confirm']['required'] ? ' *' : '');
+        $fields['billing']['id_confirm']['label'] = '';
+    }
+    
+    if (isset($fields['billing']['billing_last_name'])) {
+        $fields['billing']['billing_last_name']['placeholder'] = $fields['billing']['billing_last_name']['label'] . (isset($fields['billing']['billing_last_name']['required']) && $fields['billing']['billing_last_name']['required'] ? ' *' : '');
+        $fields['billing']['billing_last_name']['label'] = '';
+    }
+    
+    if (isset($fields['billing']['billing_email'])) {
+        $fields['billing']['billing_email']['placeholder'] = $fields['billing']['billing_email']['label'] . (isset($fields['billing']['billing_email']['required']) && $fields['billing']['billing_email']['required'] ? ' *' : '');
+        $fields['billing']['billing_email']['label'] = '';
+    }
+    
+    if (isset($fields['billing']['billing_phone'])) {
+        $fields['billing']['billing_phone']['placeholder'] = $fields['billing']['billing_phone']['label'] . (isset($fields['billing']['billing_phone']['required']) && $fields['billing']['billing_phone']['required'] ? ' *' : '');
+        $fields['billing']['billing_phone']['label'] = '';
+    }
+    
+    if (isset($fields['billing']['phone_confirm'])) {
+        $fields['billing']['phone_confirm']['placeholder'] = $fields['billing']['phone_confirm']['label'] . (isset($fields['billing']['phone_confirm']['required']) && $fields['billing']['phone_confirm']['required'] ? ' *' : '');
+        $fields['billing']['phone_confirm']['label'] = '';
+    }
+    
+    if (isset($fields['billing']['billing_address_1'])) {
+        $fields['billing']['billing_address_1']['placeholder'] = $fields['billing']['billing_address_1']['label'] . (isset($fields['billing']['billing_address_1']['required']) && $fields['billing']['billing_address_1']['required'] ? ' *' : '');
+        $fields['billing']['billing_address_1']['label'] = '';
+    }
+    
+    // billing_address_2 already has placeholder, just remove label
+    if (isset($fields['billing']['billing_address_2'])) {
+        $fields['billing']['billing_address_2']['label'] = '';
+    }
+    
+    // City field - convert label to placeholder (this was missing according to user)
+    if (isset($fields['billing']['billing_city'])) {
+        $fields['billing']['billing_city']['placeholder'] = $fields['billing']['billing_city']['label'] . (isset($fields['billing']['billing_city']['required']) && $fields['billing']['billing_city']['required'] ? ' *' : '');
+        $fields['billing']['billing_city']['label'] = '';
+    }
+    
+    if (isset($fields['billing']['billing_country'])) {
+        $fields['billing']['billing_country']['placeholder'] = $fields['billing']['billing_country']['label'] . (isset($fields['billing']['billing_country']['required']) && $fields['billing']['billing_country']['required'] ? ' *' : '');
+        $fields['billing']['billing_country']['label'] = '';
     }
 
     // Align phone fields side-by-side
@@ -3738,5 +3767,28 @@ add_action('admin_init', function () {
         $role->add_cap('delete_published_courses');
         $role->add_cap('edit_others_courses');
         $role->add_cap('delete_others_courses');
+    }
+});
+
+// Remove "Ship to a different address?" option
+add_filter('woocommerce_cart_needs_shipping_address', '__return_false');
+
+// Hide shipping fields completely
+add_filter('woocommerce_checkout_fields', 'remove_shipping_fields', 999);
+function remove_shipping_fields($fields) {
+    unset($fields['shipping']);
+    return $fields;
+}
+
+// Hide shipping address toggle with CSS
+add_action('wp_head', function() {
+    if (is_checkout()) {
+        echo '<style>
+        .woocommerce-checkout .woocommerce-shipping-fields,
+        .woocommerce-checkout #ship-to-different-address-checkbox,
+        .woocommerce-checkout .shipping_address {
+            display: none !important;
+        }
+        </style>';
     }
 });
