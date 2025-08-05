@@ -294,52 +294,7 @@ class User_Dashboard_Shortcode {
         ?>
         <div class="user-dashboard-container">
             <div class="dashboard-content">
-                <!-- Left Column - Practice Tests (moved from middle) -->
-                <?php if ($atts['show_practice'] === 'true' || $atts['show_real_test'] === 'true' || $atts['show_teacher_quizzes'] === 'true') : ?>
-                <div class="dashboard-column test-column">
-                    <div class="column-header">
-                        <h3>בחירת המצאו שאלות מהמאגר לפי נושאים</h3>
-                    </div>
-                    <div class="button-group">
-                        <?php if ($atts['show_practice'] === 'true') : ?>
-                        <a href="<?php echo esc_url(home_url('quizzes/מבחן-תרגול-להמחשה/')); ?>" class="dashboard-button practice-button">
-                            <span class="button-text">מבחני תרגול</span>
-                            <span class="button-icon">📝</span>
-                        </a>
-                        <?php endif; ?>
-                        <?php if ($atts['show_real_test'] === 'true') : ?>
-                        <a href="<?php echo esc_url(home_url('/courses/פרטי/lessons/פרק-01-תורת-החינוך-התעברותי-פרק-מבוא/quizzes/מבחן-אמת-כמו-בתאוריה/')); ?>" class="dashboard-button real-test-button">
-                            <span class="button-text">חומר לימוד לפי נושאים</span>
-                            <span class="button-icon">📋</span>
-                        </a>
-                        <?php endif; ?>
-                        <?php if ($atts['show_teacher_quizzes'] === 'true') : ?>
-                            <?php 
-                            $teacher_id = $this->get_student_teacher_id();
-                            if ($teacher_id) {
-                                $teacher_quizzes = $this->get_teacher_quizzes($teacher_id, 1); // Get only the latest quiz
-                                if (!empty($teacher_quizzes)) {
-                                    $latest_quiz = $teacher_quizzes[0];
-                                    $quiz_url = $latest_quiz->quiz_url;
-                                } else {
-                                    // Default URL if no quizzes found - you can change this
-                                    $quiz_url = home_url('/quizzes/');
-                                }
-                            } else {
-                                // Default URL if no teacher assigned - you can change this
-                                $quiz_url = home_url('/quizzes/');
-                            }
-                            ?>
-                            <a href="<?php echo esc_url($quiz_url); ?>" class="dashboard-button teacher-quiz-button">
-                                <span class="button-text">מבחני תרגול מורה</span>
-                                <span class="button-icon">🎓</span>
-                            </a>
-                        <?php endif; ?>
-                    </div>
-                </div>
-                <?php endif; ?>
-
-                <!-- Middle Column - User Panel (moved from left) -->
+                <!-- Left Column - User Panel (moved from middle) -->
                 <div class="dashboard-column user-panel">
                     <div class="user-greeting">
                         <h2><?php echo esc_html($welcome_text); ?></h2>
@@ -421,13 +376,11 @@ class User_Dashboard_Shortcode {
                     </div>
                 </div>
 
-
-
-                <!-- Right Column - Practice Tests -->
+                <!-- Middle Column - Questions by Topic (moved from right) -->
                 <?php if ($atts['show_study_materials'] === 'true' || $atts['show_topic_tests'] === 'true') : ?>
                 <div class="dashboard-column questions-column">
                     <div class="column-header">
-                        <h3>מבחנים כדוגמת מבחן התיאוריה</h3>
+                        <h3>באתר תמצאו שאלות מהמאגר לפי נושאים</h3>
                     </div>
                     <div class="button-group">
                         <?php if ($atts['show_study_materials'] === 'true') : ?>
@@ -441,6 +394,51 @@ class User_Dashboard_Shortcode {
                             <span class="button-text">מבחנים לפי נושאים</span>
                             <span class="button-icon">📝</span>
                         </a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                <?php endif; ?>
+
+                <!-- Right Column - Practice Tests (moved from middle) -->
+                <?php if ($atts['show_practice'] === 'true' || $atts['show_real_test'] === 'true' || $atts['show_teacher_quizzes'] === 'true') : ?>
+                <div class="dashboard-column test-column">
+                    <div class="column-header">
+                        <h3>באתר תמצאו מבחנים כדוגמת מבחן התיאוריה</h3>
+                    </div>
+                    <div class="button-group">
+                        <?php if ($atts['show_practice'] === 'true') : ?>
+                        <a href="<?php echo esc_url(home_url('quizzes/מבחן-תרגול-להמחשה/')); ?>" class="dashboard-button practice-button">
+                            <span class="button-text">מבחני תרגול</span>
+                            <span class="button-icon">📝</span>
+                        </a>
+                        <?php endif; ?>
+                        <?php if ($atts['show_real_test'] === 'true') : ?>
+                        <a href="<?php echo esc_url(home_url('/courses/פרטי/lessons/פרק-01-תורת-החינוך-התעברותי-פרק-מבוא/quizzes/מבחן-אמת-כמו-בתאוריה/')); ?>" class="dashboard-button real-test-button">
+                            <span class="button-text">מבחני אמת – כמו בתיאוריה</span>
+                            <span class="button-icon">📋</span>
+                        </a>
+                        <?php endif; ?>
+                        <?php if ($atts['show_teacher_quizzes'] === 'true') : ?>
+                            <?php 
+                            $teacher_id = $this->get_student_teacher_id();
+                            if ($teacher_id) {
+                                $teacher_quizzes = $this->get_teacher_quizzes($teacher_id, 1); // Get only the latest quiz
+                                if (!empty($teacher_quizzes)) {
+                                    $latest_quiz = $teacher_quizzes[0];
+                                    $quiz_url = $latest_quiz->quiz_url;
+                                } else {
+                                    // Default URL if no quizzes found - you can change this
+                                    $quiz_url = home_url('/quizzes/');
+                                }
+                            } else {
+                                // Default URL if no teacher assigned - you can change this
+                                $quiz_url = home_url('/quizzes/');
+                            }
+                            ?>
+                            <a href="<?php echo esc_url($quiz_url); ?>" class="dashboard-button teacher-quiz-button">
+                                <span class="button-text">מבחני תרגול מורה</span>
+                                <span class="button-icon">🎓</span>
+                            </a>
                         <?php endif; ?>
                     </div>
                 </div>

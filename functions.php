@@ -1134,65 +1134,10 @@ function enqueue_progress_bar_styles() {
 add_action('wp_enqueue_scripts', 'enqueue_progress_bar_styles', 99);
 
 /**
- * Enqueue Clean LearnDash Two-Column Layout CSS - SINGLE FILE ONLY
+ * LearnDash CSS customizations have been moved to backup directory
+ * All custom LearnDash styling functions have been disabled
+ * The site now uses default LearnDash LD30 styling
  */
-function enqueue_learndash_clean_layout() {
-    // Load on LearnDash course, lesson, and topic pages
-    if (is_singular(['sfwd-courses', 'sfwd-lessons', 'sfwd-topic'])) {
-        wp_enqueue_style(
-            'learndash-clean-two-column',
-            get_stylesheet_directory_uri() . '/assets/css/learndash-clean-two-column.css',
-            array(),
-            '3.0.0'
-        );
-    }
-}
-add_action('wp_enqueue_scripts', 'enqueue_learndash_clean_layout', 100);
-
-/**
- * CLEAN START - LearnDash Ultra-Flat Design Only
- * DISABLED - Restoring default LearnDash styling
- */
-/*
-function enqueue_learndash_clean_start() {
-    // Only load on LearnDash pages
-    if (is_singular(['sfwd-courses', 'sfwd-lessons', 'sfwd-topic'])) {
-        
-        // DISABLE all existing LearnDash CSS
-        wp_dequeue_style('learndash-front');
-        wp_dequeue_style('learndash-hebrew-rtl');
-        wp_dequeue_style('learndash-course-redesign');
-        wp_dequeue_style('ld30-header');
-        wp_dequeue_style('ld30-navigation');
-        wp_dequeue_style('ld30-overrides');
-        wp_dequeue_style('ld30-theme');
-        
-        // Enqueue LearnDash strong RTL CSS
-        if (is_singular('sfwd-courses') || is_singular('sfwd-lessons') || is_singular('sfwd-topic') || is_singular('sfwd-quiz')) {
-            wp_enqueue_style(
-                'learndash-strong-rtl',
-                get_stylesheet_directory_uri() . '/assets/css/learndash-strong-rtl.css',
-                array(),
-                '2.0.0'
-            );
-            
-            // Enqueue session dialog dismissal JS
-            add_action('wp_enqueue_scripts', function() {
-                if (is_singular('sfwd-courses')) {
-                    wp_enqueue_script(
-                        'dismiss-session-dialog',
-                        get_stylesheet_directory_uri() . '/assets/js/dismiss-session-dialog.js',
-                        array('jquery'),
-                        '1.0',
-                        true
-                    );
-                }
-            });
-        }
-    }
-}
-add_action('wp_enqueue_scripts', 'enqueue_learndash_clean_start', 100);
-*/
 
 // Fix translation loading order to prevent header warnings
 add_action('after_setup_theme', function() {
@@ -1232,6 +1177,12 @@ add_action('pre_get_posts', function($query) {
         $query->set('update_post_term_cache', false);
     }
 });
+
+// Enable LearnDash Video Processing for LD30 theme
+// This constant is required for LearnDash to process lesson videos in LD30
+if (!defined('LEARNDASH_LESSON_VIDEO')) {
+    define('LEARNDASH_LESSON_VIDEO', true);
+}
 
 // Memory usage monitoring (for debugging)
 if (defined('WP_DEBUG') && WP_DEBUG) {
