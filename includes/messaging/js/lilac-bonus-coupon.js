@@ -6,6 +6,16 @@
 (function($) {
     'use strict';
 
+    // Global function to show bonus message from external calls
+    function showLilacBonusMessage(force = false) {
+        if (force) {
+            // Reset session to force show message
+            sessionStorage.removeItem(settings.sessionKey);
+        }
+        showBonusMessage();
+    }
+    'use strict';
+
     // Configuration from admin settings
     const settings = window.lilacBonusSettings || {
         enabled: false,

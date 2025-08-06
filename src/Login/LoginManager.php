@@ -30,16 +30,27 @@ class LoginManager {
         }
         return self::$instance;
     }
+    
+    /**
+     * Initialize the plugin
+     * 
+     * @return LoginManager|null Instance of LoginManager or null if not available
+     */
+    public static function init() {
+        // Start session if not already started
+        if (!is_admin() && !(defined('WP_CLI') && WP_CLI)) {
+            if (!session_id() && !headers_sent()) {
+                session_start();
+            }
+            return self::get_instance();
+        }
+        return null;
+    }
 
     /**
      * Constructor
      */
     private function __construct() {
-        // Start session if not already started
-        if (!session_id()) {
-            session_start();
-        }
-
         // Register shortcodes
         add_shortcode('lilac_login', array($this, 'login_shortcode'));
         add_shortcode('lilac_teacher_lostpassword', array($this, 'teacher_lostpassword_shortcode'));
@@ -643,19 +654,6 @@ class LoginManager {
         }
     }
     
-    /**
-     * Initialize the plugin
-     * 
-     * @return LoginManager|null Instance of LoginManager or null if not available
-     */
-    public static function init() {
-        if (!is_admin() && !(defined('WP_CLI') && WP_CLI)) {
-            if (class_exists('Lilac\\Login\\LoginManager')) {
-                return self::get_instance();
-            }
-        }
-        return null;
-    }
 }
 
 // Only add the action if we're not in admin

@@ -3,6 +3,21 @@
  * Handles test timing and countdown functionality
  */
 
+// Show time warning based on type (warning/critical)
+function showTimeWarning(type) {
+    if (typeof window.LilacToast !== 'undefined' && typeof window.LilacToast.show === 'function') {
+        const message = type === 'critical' 
+            ? (window.LilacToast.config.testTimer.criticalMessage || 'Time is running out!')
+            : (window.LilacToast.config.testTimer.warningMessage || 'Time is running low!');
+            
+        window.LilacToast.show({
+            message: message,
+            type: type === 'critical' ? 'error' : 'warning',
+            duration: 5000
+        });
+    }
+}
+
 (function($) {
     'use strict';
 
