@@ -38,6 +38,41 @@ function lilac_override_learndash_templates($filepath, $name, $args, $echo, $ret
     return $filepath;
 }
 
+// Enable LearnDash Video Processing for LD30 theme
+// This constant is REQUIRED for LearnDash to process lesson videos
+if (!defined('LEARNDASH_LESSON_VIDEO')) {
+    define('LEARNDASH_LESSON_VIDEO', true);
+}
+
+// Ensure video content is processed in lesson templates
+add_filter('learndash_content', function($content, $post) {
+    if (is_singular(['sfwd-lessons', 'sfwd-topic'])) {
+        // Get video URL from lesson settings
+        $lesson_settings = learndash_get_setting($post->ID);
+        $video_url = '';
+        
+        if (!empty($lesson_settings['lesson_video_url'])) {
+            $video_url = $lesson_settings['lesson_video_url'];
+        } elseif (!empty($lesson_settings['sfwd-lessons_lesson_video_url'])) {
+            $video_url = $lesson_settings['sfwd-lessons_lesson_video_url'];
+        }
+        
+        // Also check meta fields directly
+        if (empty($video_url)) {
+            $video_meta = get_post_meta($post->ID, '_sfwd-lessons', true);
+            if (is_array($video_meta) && !empty($video_meta['sfwd-lessons_lesson_video_url'])) {
+                $video_url = $video_meta['sfwd-lessons_lesson_video_url'];
+            }
+        }
+        
+        // Add [ld_video] placeholder if video exists and not already in content
+        if (!empty($video_url) && strpos($content, '[ld_video]') === false) {
+            $content = '[ld_video]' . $content;
+        }
+    }
+    return $content;
+}, 10, 2);
+
 // Template debugging removed for performance - enable only when needed for troubleshooting
 
 // Fix for LearnDash WooCommerce translation loading issue
@@ -1177,12 +1212,6 @@ add_action('pre_get_posts', function($query) {
         $query->set('update_post_term_cache', false);
     }
 });
-
-// Enable LearnDash Video Processing for LD30 theme
-// This constant is required for LearnDash to process lesson videos in LD30
-if (!defined('LEARNDASH_LESSON_VIDEO')) {
-    define('LEARNDASH_LESSON_VIDEO', true);
-}
 
 // Memory usage monitoring (for debugging)
 if (defined('WP_DEBUG') && WP_DEBUG) {
