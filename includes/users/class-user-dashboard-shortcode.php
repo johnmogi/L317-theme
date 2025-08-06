@@ -280,6 +280,21 @@ class User_Dashboard_Shortcode {
         if (!is_user_logged_in()) {
             return '<div class="user-dashboard-login-notice">יש להתחבר למערכת כדי לצפות בלוח הבקרה.</div>';
         }
+        
+        // EMERGENCY DEBUG - PRINT_R ALL USER META
+        $current_user = wp_get_current_user();
+        $all_user_meta = get_user_meta($current_user->ID);
+        
+        echo '<div style="background: #ff0000; color: white; padding: 20px; margin: 20px 0; font-size: 12px; z-index: 9999; position: relative;">';
+        echo '<h2>EMERGENCY DEBUG - USER META PRINT_R</h2>';
+        echo '<p><strong>User ID:</strong> ' . $current_user->ID . '</p>';
+        echo '<p><strong>User Login:</strong> ' . $current_user->user_login . '</p>';
+        echo '<p><strong>Current Time:</strong> ' . date('Y-m-d H:i:s') . ' (timestamp: ' . time() . ')</p>';
+        echo '<h3>ALL USER META:</h3>';
+        echo '<pre style="background: white; color: black; padding: 10px; overflow: auto; max-height: 400px;">';
+        print_r($all_user_meta);
+        echo '</pre>';
+        echo '</div>';
 
         // Parse attributes with defaults
         $atts = shortcode_atts($this->defaults, $atts, 'user_dashboard');
@@ -307,6 +322,21 @@ class User_Dashboard_Shortcode {
                                 <span class="meta-icon">🎯</span>
                                 <span class="meta-text"><?php echo esc_html($atts['track_name']); ?></span>
                             </div>
+                            <?php 
+                            // Display course access expiration date using plugin helper function
+                            $current_user = wp_get_current_user();
+                            if (function_exists('wc_learndash_get_user_expiry_formatted')) {
+                                $expiry_date = wc_learndash_get_user_expiry_formatted($current_user->ID);
+                                if ($expiry_date) :
+                            ?>
+                            <div class="meta-item expiry" style="background: #e8f5e8; border: 1px solid #4caf50; border-radius: 5px; padding: 8px;">
+                                <span class="meta-icon">⏰</span>
+                                <span class="meta-text" style="font-weight: bold; color: #2e7d32;">תוקף עד: <?php echo esc_html($expiry_date); ?></span>
+                            </div>
+                            <?php 
+                                endif;
+                            }
+                            ?>
                             <?php 
                             // Display LearnDash course access information
                             $access_info = $this->get_user_course_access_info();
