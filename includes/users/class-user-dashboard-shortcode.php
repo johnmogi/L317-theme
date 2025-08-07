@@ -320,7 +320,11 @@ class User_Dashboard_Shortcode {
                             </div>
                             <div class="meta-item track">
                                 <span class="meta-icon">🎯</span>
-                                <span class="meta-text"><?php echo esc_html($atts['track_name']); ?></span>
+                                <span class="meta-text">
+                                    <a href="<?php echo esc_url(home_url('/my-courses/')); ?>" style="color: inherit; text-decoration: none;">
+                                        <?php echo esc_html($atts['track_name']); ?>
+                                    </a>
+                                </span>
                             </div>
                             <?php 
                             // Display course access expiration date using plugin helper function
