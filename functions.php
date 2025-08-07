@@ -788,26 +788,6 @@ function custom_override_checkout_fields($fields) {
     // Remove order comments and unnecessary fields
     unset($fields['order']['order_comments']);
     
-    // Class and School Info Section (placeholders only, no labels)
-    $fields['billing']['class_number'] = array(
-        'type'        => 'text',
-        'label'       => '', // No label
-        'placeholder' => 'מספר כיתה (אופציונלי)',
-        'required'    => false,
-        'class'       => array('form-row-last'),
-        'priority'    => 30,
-        'clear'       => true
-    );
-    
-    $fields['billing']['school_code'] = array(
-        'type'        => 'text',
-        'label'       => '', // No label
-        'placeholder' => 'קוד בית ספר (אופציונלי)',
-        'required'    => false,
-        'class'       => array('form-row-first'),
-        'priority'    => 25
-    );
-    
     // Student Information Section
     $fields['billing']['billing_first_name'] = array(
         'label'       => 'שם פרטי',
