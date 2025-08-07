@@ -783,23 +783,38 @@ add_action('template_redirect', function() {
 /**
  * Customize checkout fields for school registration
  */
+// Force remove unwanted fields with high priority
+add_filter('woocommerce_checkout_fields', 'force_remove_unwanted_fields', 999);
+function force_remove_unwanted_fields($fields) {
+    // Force remove these fields with highest priority
+    unset($fields['billing']['school_code']);
+    unset($fields['billing']['class_number']);
+    unset($fields['billing']['promo_code']);
+    return $fields;
+}
+
 add_filter('woocommerce_checkout_fields', 'custom_override_checkout_fields');
 function custom_override_checkout_fields($fields) {
     // Remove order comments and unnecessary fields
     unset($fields['order']['order_comments']);
     
-    // Student Information Section
+    // Remove school_code, class_number, and promo_code fields completely
+    unset($fields['billing']['school_code']);
+    unset($fields['billing']['class_number']);
+    unset($fields['billing']['promo_code']);
+    
+    // Student Information Section - placeholders only
     $fields['billing']['billing_first_name'] = array(
-        'label'       => 'שם פרטי',
-        'placeholder' => 'שם פרטי',
+        'label'       => '',
+        'placeholder' => 'שם פרטי *',
         'required'    => true,
         'class'       => array('form-row-first'),
         'priority'    => 10
     );
     
     $fields['billing']['billing_last_name'] = array(
-        'label'       => 'שם משפחה',
-        'placeholder' => 'שם משפחה',
+        'label'       => '',
+        'placeholder' => 'שם משפחה *',
         'required'    => true,
         'class'       => array('form-row-last'),
         'priority'    => 20
@@ -812,10 +827,10 @@ function custom_override_checkout_fields($fields) {
         'priority'    => 35
     );
     
-    // Phone and ID Section
+    // Phone and ID Section - placeholders only
     $fields['billing']['billing_phone'] = array(
-        'label'       => 'טלפון נייד (זיהוי משתמש)',
-        'placeholder' => 'הזן מספר טלפון נייד',
+        'label'       => '',
+        'placeholder' => 'טלפון נייד (זיהוי משתמש) *',
         'required'    => true,
         'class'       => array('form-row-first'),
         'priority'    => 50,
@@ -824,8 +839,8 @@ function custom_override_checkout_fields($fields) {
     
     $fields['billing']['phone_confirm'] = array(
         'type'        => 'text',
-        'label'       => 'וידוא טלפון נייד',
-        'placeholder' => 'הזן שוב את המספר',
+        'label'       => '',
+        'placeholder' => 'וידוא טלפון נייד *',
         'required'    => true,
         'class'       => array('form-row-last'),
         'priority'    => 60
@@ -833,8 +848,8 @@ function custom_override_checkout_fields($fields) {
     
     $fields['billing']['id_number'] = array(
         'type'        => 'text',
-        'label'       => 'מספר ת.ז (סיסמה)',
-        'placeholder' => 'תעודת זהות',
+        'label'       => '',
+        'placeholder' => 'מספר ת.ז (סיסמה) *',
         'required'    => true,
         'class'       => array('form-row-first'),
         'priority'    => 70
@@ -842,30 +857,24 @@ function custom_override_checkout_fields($fields) {
     
     $fields['billing']['id_confirm'] = array(
         'type'        => 'text',
-        'label'       => 'וידוא תעודת זהות',
-        'placeholder' => 'הזן שוב ת.ז',
+        'label'       => '',
+        'placeholder' => 'וידוא תעודת זהות *',
         'required'    => true,
         'class'       => array('form-row-last'),
         'priority'    => 80
     );
     
-    // Email field
+    // Email field - placeholder only
     $fields['billing']['billing_email'] = array(
-        'label'       => 'אימייל לאישור',
-        'placeholder' => 'אימייל לאישור הרשמה',
+        'label'       => '',
+        'placeholder' => 'אימייל לאישור הרשמה *',
         'required'    => true,
         'class'       => array('form-row-wide'),
         'priority'    => 90,
         'clear'       => true
     );
     
-    // Promo code link
-    $fields['billing']['promo_code'] = array(
-        'type'        => 'checkbox',
-        'label'       => 'יש ברשותי קוד הטבה',
-        'class'       => array('form-row-wide'),
-        'priority'    => 100
-    );
+    // Promo code field removed as requested
     
     // Remove all address fields for virtual products
     if (WC()->cart && !empty(WC()->cart->get_cart())) {
@@ -3760,15 +3769,70 @@ function remove_shipping_fields($fields) {
     return $fields;
 }
 
-// Hide shipping address toggle with CSS
+// Universal CSS fix for checkout fields with high priority
 add_action('wp_head', function() {
     if (is_checkout()) {
         echo '<style>
-        .woocommerce-checkout .woocommerce-shipping-fields,
-        .woocommerce-checkout #ship-to-different-address-checkbox,
-        .woocommerce-checkout .shipping_address {
+        /* Hide shipping fields */
+        .woocommerce-shipping-fields,
+        .woocommerce-additional-fields {
             display: none !important;
+        }
+        
+        /* FORCE HIDE ALL CHECKOUT FIELD LABELS - AGGRESSIVE */
+        .woocommerce-billing-fields .form-row label,
+        .woocommerce-checkout .form-row label,
+        .checkout .form-row label,
+        label.required_field,
+        .form-row label,
+        .woocommerce-billing-fields label,
+        .woocommerce-checkout label,
+        .checkout label,
+        label[for],
+        .required_field {
+            display: none !important;
+            visibility: hidden !important;
+            height: 0 !important;
+            width: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            opacity: 0 !important;
+            position: absolute !important;
+            left: -9999px !important;
+        }
+        
+        /* FORCE HIDE PROMO CODE FIELD - AGGRESSIVE */
+        #promo_code_field,
+        p#promo_code_field,
+        .form-row#promo_code_field,
+        [data-priority="100"],
+        .form-row[data-priority="100"],
+        .form-row.form-row-wide:last-child,
+        .woocommerce-billing-fields .form-row:last-child {
+            display: none !important;
+            visibility: hidden !important;
+            height: 0 !important;
+            width: 0 !important;
+            opacity: 0 !important;
+            position: absolute !important;
+            left: -9999px !important;
+        }
+        
+        /* Hide checkbox labels specifically */
+        .checkbox label,
+        label.checkbox,
+        input[type="checkbox"] + label {
+            display: none !important;
+            visibility: hidden !important;
+        }
+        
+        /* Ensure input fields are properly styled */
+        .woocommerce-billing-fields input[type="text"],
+        .woocommerce-billing-fields input[type="email"],
+        .woocommerce-billing-fields input[type="tel"] {
+            width: 100% !important;
+            margin-top: 0 !important;
         }
         </style>';
     }
-});
+}, 999); // High priority to override other styles
