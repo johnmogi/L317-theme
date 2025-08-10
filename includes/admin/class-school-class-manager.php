@@ -89,7 +89,8 @@ class Hello_Theme_Child_School_Class_Manager {
         if ('admin.php' === $pagenow && isset($_GET['page'])) {
             if ('manage-school-class' === $_GET['page'] || 
                 'class-management-admin' === $_GET['page'] || 
-                'class-management-teacher' === $_GET['page']) {
+                'class-management-teacher' === $_GET['page'] ||
+                'school-manager' === $_GET['page']) {
                 wp_redirect(admin_url('admin.php?page=class-management'));
                 exit;
             }

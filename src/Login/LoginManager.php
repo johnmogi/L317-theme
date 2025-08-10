@@ -207,10 +207,30 @@ class LoginManager {
     }
     
     /**
-     * Get the appropriate redirect URL based on user role
+     * Check if a user is a teacher/instructor based on various role names
+     * 
+     * @param array $user_roles Array of user roles
+     * @return bool True if user is a teacher/instructor
      */
+    private function is_teacher($user_roles) {
+        // List of role names that identify a teacher/instructor
+        $teacher_roles = array(
+            'instructor', 'Instructor', 'school_teacher', 'teacher', 'Teacher',
+            'school|_teacher', 'swd', 'wdm', 'educator', 'tutor', 'lecturer'
+        );
+        
+        // Check if any of the user's roles match our teacher roles
+        foreach ($user_roles as $role) {
+            if (in_array(strtolower($role), array_map('strtolower', $teacher_roles))) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
     /**
-     * Get redirect URL for users based on their enrolled courses
+     * Get redirect URL for users based on their enrolled courses and role
      * 
      * @param WP_User $user The logged-in user object
      * @return string The redirect URL
@@ -219,6 +239,14 @@ class LoginManager {
         // Default to home page
         $redirect_url = home_url();
         $roles = (array) $user->roles;
+        
+        // Check for teacher redirect from the form
+        $teacher_redirect = isset($_POST['teacher_redirect']) ? esc_url_raw($_POST['teacher_redirect']) : '';
+        
+        // If this is a teacher and we have a teacher_redirect URL, use it
+        if ($this->is_teacher($roles) && !empty($teacher_redirect)) {
+            return $teacher_redirect;
+        }
         
         // Check if LearnDash is active
         if (function_exists('learndash_user_get_enrolled_courses')) {
@@ -239,8 +267,13 @@ class LoginManager {
         
         // Fallback to role-based redirects if no courses found or LearnDash not active
         
+        // Check for teacher roles first
+        if ($this->is_teacher($roles)) {
+            // Default teacher redirect to admin dashboard
+            return admin_url('admin.php?page=class-management');
+        }
         // Students
-        if (in_array('school_student', $roles)) {
+        elseif (in_array('school_student', $roles)) {
             $redirect_url = get_permalink(get_option('lilac_school_student_dashboard_page', 0));
             if (!$redirect_url) {
                 // Fallback to course page or dashboard
@@ -255,10 +288,10 @@ class LoginManager {
                 $redirect_url = get_permalink(get_option('lilac_private_course_page', 0)) ?: home_url('/my-courses/');
             }
         }
-        // Teachers
-        elseif (in_array('school_teacher', $roles)) {
-            // Direct teachers to the admin dashboard page instead of frontend
-            $redirect_url = admin_url('admin.php?page=class-management');
+        
+        // Check if there's a custom redirect in the form
+        if (isset($_POST['redirect_to']) && !empty($_POST['redirect_to'])) {
+            $redirect_url = esc_url_raw($_POST['redirect_to']);
         }
         
         // Allow filtering the redirect URL

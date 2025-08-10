@@ -2006,12 +2006,7 @@ add_action('admin_notices', function() {
     }
 });
 
-// Debug function to check registered shortcodes
-function debug_registered_shortcodes() {
-    global $shortcode_tags;
-    error_log('Registered Shortcodes: ' . print_r(array_keys($shortcode_tags), true));
-}
-add_action('init', 'debug_registered_shortcodes', 999);
+// Removed noisy debug: registered shortcodes logger
 
 /**
  * Add custom body class for LearnDash courses

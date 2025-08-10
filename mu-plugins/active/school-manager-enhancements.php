@@ -83,13 +83,13 @@ class School_Manager_Enhancements {
      * Fix teacher roles automatically
      */
     public function fix_teacher_roles() {
-        // Only run once per day
-        $last_run = get_transient('teacher_role_fix_last_run');
-        if ($last_run) {
-            return;
-        }
+        // Force run for immediate fix - remove daily limit temporarily
+        // $last_run = get_transient('teacher_role_fix_last_run');
+        // if ($last_run) {
+        //     return;
+        // }
         
-        set_transient('teacher_role_fix_last_run', time(), DAY_IN_SECONDS);
+        // set_transient('teacher_role_fix_last_run', time(), DAY_IN_SECONDS);
         
         // Convert school_teacher to wdm_instructor
         $school_teachers = get_users(array('role' => 'school_teacher'));
@@ -98,6 +98,13 @@ class School_Manager_Enhancements {
             $user->add_role('wdm_instructor');
             $this->add_instructor_capabilities($user);
             error_log("School Manager Enhancements: Converted user {$user->ID} to wdm_instructor");
+        }
+        
+        // Also ensure existing wdm_instructor users have proper capabilities
+        $instructors = get_users(array('role' => 'wdm_instructor'));
+        foreach ($instructors as $user) {
+            $this->add_instructor_capabilities($user);
+            error_log("School Manager Enhancements: Updated capabilities for instructor {$user->ID}");
         }
     }
     
