@@ -280,21 +280,6 @@ class User_Dashboard_Shortcode {
         if (!is_user_logged_in()) {
             return '<div class="user-dashboard-login-notice">יש להתחבר למערכת כדי לצפות בלוח הבקרה.</div>';
         }
-        
-        // EMERGENCY DEBUG - PRINT_R ALL USER META
-        $current_user = wp_get_current_user();
-        $all_user_meta = get_user_meta($current_user->ID);
-        
-        echo '<div style="background: #ff0000; color: white; padding: 20px; margin: 20px 0; font-size: 12px; z-index: 9999; position: relative;">';
-        echo '<h2>EMERGENCY DEBUG - USER META PRINT_R</h2>';
-        echo '<p><strong>User ID:</strong> ' . $current_user->ID . '</p>';
-        echo '<p><strong>User Login:</strong> ' . $current_user->user_login . '</p>';
-        echo '<p><strong>Current Time:</strong> ' . date('Y-m-d H:i:s') . ' (timestamp: ' . time() . ')</p>';
-        echo '<h3>ALL USER META:</h3>';
-        echo '<pre style="background: white; color: black; padding: 10px; overflow: auto; max-height: 400px;">';
-        print_r($all_user_meta);
-        echo '</pre>';
-        echo '</div>';
 
         // Parse attributes with defaults
         $atts = shortcode_atts($this->defaults, $atts, 'user_dashboard');
@@ -309,7 +294,7 @@ class User_Dashboard_Shortcode {
         ?>
         <div class="user-dashboard-container">
             <div class="dashboard-content">
-                <!-- Left Column - User Panel (moved from middle) -->
+                <!-- Left Column - User Panel -->
                 <div class="dashboard-column user-panel">
                     <div class="user-greeting">
                         <h2><?php echo esc_html($welcome_text); ?></h2>
@@ -320,27 +305,8 @@ class User_Dashboard_Shortcode {
                             </div>
                             <div class="meta-item track">
                                 <span class="meta-icon">🎯</span>
-                                <span class="meta-text">
-                                    <a href="<?php echo esc_url(home_url('/my-courses/')); ?>" style="color: inherit; text-decoration: none;">
-                                        <?php echo esc_html($atts['track_name']); ?>
-                                    </a>
-                                </span>
+                                <span class="meta-text"><?php echo esc_html($atts['track_name']); ?></span>
                             </div>
-                            <?php 
-                            // Display course access expiration date using plugin helper function
-                            $current_user = wp_get_current_user();
-                            if (function_exists('wc_learndash_get_user_expiry_formatted')) {
-                                $expiry_date = wc_learndash_get_user_expiry_formatted($current_user->ID);
-                                if ($expiry_date) :
-                            ?>
-                            <div class="meta-item expiry" style="background: #e8f5e8; border: 1px solid #4caf50; border-radius: 5px; padding: 8px;">
-                                <span class="meta-icon">⏰</span>
-                                <span class="meta-text" style="font-weight: bold; color: #2e7d32;">תוקף עד: <?php echo esc_html($expiry_date); ?></span>
-                            </div>
-                            <?php 
-                                endif;
-                            }
-                            ?>
                             <?php 
                             // Display LearnDash course access information
                             $access_info = $this->get_user_course_access_info();
@@ -354,26 +320,10 @@ class User_Dashboard_Shortcode {
                         </div>
                     </div>
                     <div class="user-actions">
-                        <?php 
-                        // Check if current user is admin, teacher, or instructor
-                        $current_user = wp_get_current_user();
-                        $is_admin_or_teacher = false;
-                        $admin_teacher_roles = array('administrator', 'school_teacher', 'wdm_instructor', 'instructor', 'wdm_swd_instructor', 'swd_instructor');
-                        
-                        foreach ($admin_teacher_roles as $role) {
-                            if (in_array($role, $current_user->roles)) {
-                                $is_admin_or_teacher = true;
-                                break;
-                            }
-                        }
-                        
-                        // Only show edit account link to admin/teacher/instructor users
-                        if ($is_admin_or_teacher) : ?>
                         <a href="<?php echo esc_url($atts['account_url']); ?>" class="user-action-link edit-account">
                             <span class="link-icon">✏️</span>
-                            <span class="link-text">ערוך חשבון (שינוי נושא לימוד)</span>
+                            <span class="link-text">ערוך חשבון (<?php echo esc_html($vehicle_text); ?>)</span>
                         </a>
-                        <?php endif; ?>
                         <?php if ($atts['show_stats'] === 'true') : ?>
                             <?php 
                             // Check if current user is a teacher
@@ -410,34 +360,11 @@ class User_Dashboard_Shortcode {
                     </div>
                 </div>
 
-                <!-- Middle Column - Questions by Topic (moved from right) -->
-                <?php if ($atts['show_study_materials'] === 'true' || $atts['show_topic_tests'] === 'true') : ?>
-                <div class="dashboard-column questions-column">
-                    <div class="column-header">
-                        <h3>באתר תמצאו שאלות מהמאגר לפי נושאים</h3>
-                    </div>
-                    <div class="button-group">
-                        <?php if ($atts['show_study_materials'] === 'true') : ?>
-                        <a href="<?php echo esc_url($atts['study_materials_url']); ?>" class="dashboard-button study-materials-button">
-                            <span class="button-text">חומר לימוד לפי נושאים</span>
-                            <span class="button-icon">📚</span>
-                        </a>
-                        <?php endif; ?>
-                        <?php if ($atts['show_topic_tests'] === 'true') : ?>
-                        <a href="<?php echo esc_url($atts['topic_tests_url']); ?>" class="dashboard-button topic-tests-button">
-                            <span class="button-text">מבחנים לפי נושאים</span>
-                            <span class="button-icon">📝</span>
-                        </a>
-                        <?php endif; ?>
-                    </div>
-                </div>
-                <?php endif; ?>
-
-                <!-- Right Column - Practice Tests (moved from middle) -->
+                <!-- Middle Column - Practice Tests -->
                 <?php if ($atts['show_practice'] === 'true' || $atts['show_real_test'] === 'true' || $atts['show_teacher_quizzes'] === 'true') : ?>
                 <div class="dashboard-column test-column">
                     <div class="column-header">
-                        <h3>באתר תמצאו מבחנים כדוגמת מבחן התיאוריה</h3>
+                        <h3>מבחנים כדוגמת מבחן התיאוריה</h3>
                     </div>
                     <div class="button-group">
                         <?php if ($atts['show_practice'] === 'true') : ?>
@@ -470,9 +397,32 @@ class User_Dashboard_Shortcode {
                             }
                             ?>
                             <a href="<?php echo esc_url($quiz_url); ?>" class="dashboard-button teacher-quiz-button">
-                                <span class="button-text">מבחני תרגול מורה</span>
+                                <span class="button-text">מבחן מורה</span>
                                 <span class="button-icon">🎓</span>
                             </a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                <?php endif; ?>
+
+                <!-- Right Column - Questions by Topic -->
+                <?php if ($atts['show_study_materials'] === 'true' || $atts['show_topic_tests'] === 'true') : ?>
+                <div class="dashboard-column questions-column">
+                    <div class="column-header">
+                        <h3>שאלות מהמאגר לפי נושאים</h3>
+                    </div>
+                    <div class="button-group">
+                        <?php if ($atts['show_study_materials'] === 'true') : ?>
+                        <a href="<?php echo esc_url($atts['study_materials_url']); ?>" class="dashboard-button study-materials-button">
+                            <span class="button-text">חומר לימוד לפי נושאים</span>
+                            <span class="button-icon">📚</span>
+                        </a>
+                        <?php endif; ?>
+                        <?php if ($atts['show_topic_tests'] === 'true') : ?>
+                        <a href="<?php echo esc_url($atts['topic_tests_url']); ?>" class="dashboard-button topic-tests-button">
+                            <span class="button-text">מבחנים לפי נושאים</span>
+                            <span class="button-icon">📝</span>
+                        </a>
                         <?php endif; ?>
                     </div>
                 </div>

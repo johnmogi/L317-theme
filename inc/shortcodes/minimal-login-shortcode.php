@@ -36,16 +36,11 @@ function lilac_minimal_login_shortcode($atts) {
             'title' => 'התחברות', // Default title
             'login_button_text' => 'התחבר',
             'show_remember_me' => 'yes',
-            'show_forgot_password' => 'yes',
-            'redirect' => '', // Default empty (will use WordPress default)
-            'teacher_redirect' => admin_url() // Default redirect for teachers
+            'show_forgot_password' => 'yes'
         ),
         $atts,
         'lilac_minimal_login'
     );
-    
-    // Store redirect URL in a hidden field
-    $redirect_to = !empty($atts['redirect']) ? esc_url($atts['redirect']) : '';
     
     // Start output buffering
     ob_start();
@@ -90,12 +85,10 @@ function lilac_minimal_login_shortcode($atts) {
             </div>
             <?php endif; ?>
             
-            <!-- Hidden fields for login processing and redirects -->
+            <!-- Hidden field for login processing -->
             <input type="hidden" name="lilac_login_action" value="1" />
-            <?php if (!empty($redirect_to)) : ?>
-                <input type="hidden" name="redirect_to" value="<?php echo esc_url($redirect_to); ?>" />
-            <?php endif; ?>
-            <input type="hidden" name="teacher_redirect" value="<?php echo esc_url($atts['teacher_redirect']); ?>" />
+            <!-- Hidden field to ensure teachers are redirected to admin dashboard -->
+            <input type="hidden" name="teacher_redirect" value="admin" />
             <?php wp_nonce_field('lilac_login_action', 'lilac_login_nonce'); ?>
             
             <div class="form-group submit-group">

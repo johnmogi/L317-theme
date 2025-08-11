@@ -5,18 +5,18 @@
  * @package Lilac
  */
 
-// LearnDash template override for course listing only
+// Optimized LearnDash template override - Single efficient filter
 add_filter('learndash_template', 'lilac_override_learndash_templates', 10, 5);
 
 /**
- * Override specific LearnDash templates (course listing only)
- * Main course and lesson templates now use WordPress single post templates
+ * Efficiently override LearnDash templates without redundant file checks
+ * Uses cached template paths for better performance
  */
 function lilac_override_learndash_templates($filepath, $name, $args, $echo, $return_file_path) {
     // Static cache to avoid repeated file_exists() calls
     static $template_cache = array();
     
-    // Define template overrides (only course listing now)
+    // Define template overrides
     $template_overrides = array(
         'course/listing.php' => '/learndash/ld30/templates/course/listing-flat.php'
     );
@@ -37,41 +37,6 @@ function lilac_override_learndash_templates($filepath, $name, $args, $echo, $ret
     
     return $filepath;
 }
-
-// Enable LearnDash Video Processing for LD30 theme
-// This constant is REQUIRED for LearnDash to process lesson videos
-if (!defined('LEARNDASH_LESSON_VIDEO')) {
-    define('LEARNDASH_LESSON_VIDEO', true);
-}
-
-// Ensure video content is processed in lesson templates
-add_filter('learndash_content', function($content, $post) {
-    if (is_singular(['sfwd-lessons', 'sfwd-topic'])) {
-        // Get video URL from lesson settings
-        $lesson_settings = learndash_get_setting($post->ID);
-        $video_url = '';
-        
-        if (!empty($lesson_settings['lesson_video_url'])) {
-            $video_url = $lesson_settings['lesson_video_url'];
-        } elseif (!empty($lesson_settings['sfwd-lessons_lesson_video_url'])) {
-            $video_url = $lesson_settings['sfwd-lessons_lesson_video_url'];
-        }
-        
-        // Also check meta fields directly
-        if (empty($video_url)) {
-            $video_meta = get_post_meta($post->ID, '_sfwd-lessons', true);
-            if (is_array($video_meta) && !empty($video_meta['sfwd-lessons_lesson_video_url'])) {
-                $video_url = $video_meta['sfwd-lessons_lesson_video_url'];
-            }
-        }
-        
-        // Add [ld_video] placeholder if video exists and not already in content
-        if (!empty($video_url) && strpos($content, '[ld_video]') === false) {
-            $content = '[ld_video]' . $content;
-        }
-    }
-    return $content;
-}, 10, 2);
 
 // Template debugging removed for performance - enable only when needed for troubleshooting
 
@@ -783,54 +748,60 @@ add_action('template_redirect', function() {
 /**
  * Customize checkout fields for school registration
  */
-// Force remove unwanted fields with high priority
-add_filter('woocommerce_checkout_fields', 'force_remove_unwanted_fields', 999);
-function force_remove_unwanted_fields($fields) {
-    // Force remove these fields with highest priority
-    unset($fields['billing']['school_code']);
-    unset($fields['billing']['class_number']);
-    unset($fields['billing']['promo_code']);
-    return $fields;
-}
-
 add_filter('woocommerce_checkout_fields', 'custom_override_checkout_fields');
 function custom_override_checkout_fields($fields) {
     // Remove order comments and unnecessary fields
     unset($fields['order']['order_comments']);
     
-    // Remove school_code, class_number, and promo_code fields completely
-    unset($fields['billing']['school_code']);
-    unset($fields['billing']['class_number']);
-    unset($fields['billing']['promo_code']);
-    
-    // Student Information Section - placeholders only
+    // Student Information Section
     $fields['billing']['billing_first_name'] = array(
-        'label'       => '',
-        'placeholder' => 'שם פרטי *',
+        'label'       => 'שם פרטי',
+        'placeholder' => 'שם פרטי',
         'required'    => true,
         'class'       => array('form-row-first'),
         'priority'    => 10
     );
     
     $fields['billing']['billing_last_name'] = array(
-        'label'       => '',
-        'placeholder' => 'שם משפחה *',
+        'label'       => 'שם משפחה',
+        'placeholder' => 'שם משפחה',
         'required'    => true,
         'class'       => array('form-row-last'),
         'priority'    => 20
     );
     
-    // School Info Section (will be populated via AJAX) - keeping for compatibility
+    // School Code Section
+    $fields['billing']['school_code'] = array(
+        'type'        => 'text',
+        'label'       => 'קוד בית ספר',
+        'placeholder' => 'הזן קוד בית ספר (אופציונלי)',
+        'required'    => false,
+        'class'       => array('form-row-first'),
+        'priority'    => 30,
+        'clear'       => true
+    );
+    
+    // School Info Section (will be populated via AJAX)
     $fields['billing']['school_info'] = array(
         'type'        => 'hidden',
         'class'       => array('school-info-container'),
         'priority'    => 35
     );
     
-    // Phone and ID Section - placeholders only
+    // Class Number
+    $fields['billing']['class_number'] = array(
+        'type'        => 'text',
+        'label'       => 'מספר כיתה',
+        'placeholder' => 'מספר הכיתה שלך (אופציונלי)',
+        'required'    => false,
+        'class'       => array('form-row-last'),
+        'priority'    => 40
+    );
+    
+    // Phone and ID Section
     $fields['billing']['billing_phone'] = array(
-        'label'       => '',
-        'placeholder' => 'טלפון נייד (זיהוי משתמש) *',
+        'label'       => 'טלפון נייד (זיהוי משתמש)',
+        'placeholder' => 'הזן מספר טלפון נייד',
         'required'    => true,
         'class'       => array('form-row-first'),
         'priority'    => 50,
@@ -839,8 +810,8 @@ function custom_override_checkout_fields($fields) {
     
     $fields['billing']['phone_confirm'] = array(
         'type'        => 'text',
-        'label'       => '',
-        'placeholder' => 'וידוא טלפון נייד *',
+        'label'       => 'וידוא טלפון נייד',
+        'placeholder' => 'הזן שוב את המספר',
         'required'    => true,
         'class'       => array('form-row-last'),
         'priority'    => 60
@@ -848,8 +819,8 @@ function custom_override_checkout_fields($fields) {
     
     $fields['billing']['id_number'] = array(
         'type'        => 'text',
-        'label'       => '',
-        'placeholder' => 'מספר ת.ז (סיסמה) *',
+        'label'       => 'מספר ת.ז (סיסמה)',
+        'placeholder' => 'תעודת זהות',
         'required'    => true,
         'class'       => array('form-row-first'),
         'priority'    => 70
@@ -857,24 +828,30 @@ function custom_override_checkout_fields($fields) {
     
     $fields['billing']['id_confirm'] = array(
         'type'        => 'text',
-        'label'       => '',
-        'placeholder' => 'וידוא תעודת זהות *',
+        'label'       => 'וידוא תעודת זהות',
+        'placeholder' => 'הזן שוב ת.ז',
         'required'    => true,
         'class'       => array('form-row-last'),
         'priority'    => 80
     );
     
-    // Email field - placeholder only
+    // Email field
     $fields['billing']['billing_email'] = array(
-        'label'       => '',
-        'placeholder' => 'אימייל לאישור הרשמה *',
+        'label'       => 'אימייל לאישור',
+        'placeholder' => 'אימייל לאישור הרשמה',
         'required'    => true,
         'class'       => array('form-row-wide'),
         'priority'    => 90,
         'clear'       => true
     );
     
-    // Promo code field removed as requested
+    // Promo code link
+    $fields['billing']['promo_code'] = array(
+        'type'        => 'checkbox',
+        'label'       => 'יש ברשותי קוד הטבה',
+        'class'       => array('form-row-wide'),
+        'priority'    => 100
+    );
     
     // Remove all address fields for virtual products
     if (WC()->cart && !empty(WC()->cart->get_cart())) {
@@ -1178,10 +1155,46 @@ function enqueue_progress_bar_styles() {
 add_action('wp_enqueue_scripts', 'enqueue_progress_bar_styles', 99);
 
 /**
- * LearnDash CSS customizations have been moved to backup directory
- * All custom LearnDash styling functions have been disabled
- * The site now uses default LearnDash LD30 styling
+ * CLEAN START - LearnDash Ultra-Flat Design Only
  */
+function enqueue_learndash_clean_start() {
+    // Only load on LearnDash pages
+    if (is_singular(['sfwd-courses', 'sfwd-lessons', 'sfwd-topic'])) {
+        
+        // DISABLE all existing LearnDash CSS
+        wp_dequeue_style('learndash-front');
+        wp_dequeue_style('learndash-hebrew-rtl');
+        wp_dequeue_style('learndash-course-redesign');
+        wp_dequeue_style('ld30-header');
+        wp_dequeue_style('ld30-navigation');
+        wp_dequeue_style('ld30-overrides');
+        wp_dequeue_style('ld30-theme');
+        
+        // Enqueue LearnDash strong RTL CSS
+        if (is_singular('sfwd-courses') || is_singular('sfwd-lessons') || is_singular('sfwd-topic') || is_singular('sfwd-quiz')) {
+            wp_enqueue_style(
+                'learndash-strong-rtl',
+                get_stylesheet_directory_uri() . '/assets/css/learndash-strong-rtl.css',
+                array(),
+                '2.0.0'
+            );
+            
+            // Enqueue session dialog dismissal JS
+            add_action('wp_enqueue_scripts', function() {
+                if (is_singular('sfwd-courses')) {
+                    wp_enqueue_script(
+                        'dismiss-session-dialog',
+                        get_stylesheet_directory_uri() . '/assets/js/dismiss-session-dialog.js',
+                        array('jquery'),
+                        '1.0',
+                        true
+                    );
+                }
+            });
+        }
+    }
+}
+add_action('wp_enqueue_scripts', 'enqueue_learndash_clean_start', 100);
 
 // Fix translation loading order to prevent header warnings
 add_action('after_setup_theme', function() {
@@ -1235,7 +1248,7 @@ if (defined('WP_DEBUG') && WP_DEBUG) {
 
 // Load other theme files
 require_once get_stylesheet_directory() . '/inc/shortcodes/loader.php';
-// require_once get_stylesheet_directory() . '/includes/ld30-styles.php'; // DISABLED - Restoring default LearnDash styling
+require_once get_stylesheet_directory() . '/includes/ld30-styles.php';
 
 // Load YITH status check (admin only)
 if (is_admin()) {
@@ -2006,7 +2019,12 @@ add_action('admin_notices', function() {
     }
 });
 
-// Removed noisy debug: registered shortcodes logger
+// // Debug function to check registered shortcodes
+// function debug_registered_shortcodes() {
+//     global $shortcode_tags;
+//     // error_log('Registered Shortcodes: ' . print_r(array_keys($shortcode_tags), true));
+// }
+// add_action('init', 'debug_registered_shortcodes', 999);
 
 /**
  * Add custom body class for LearnDash courses
@@ -3652,69 +3670,19 @@ function force_country_to_israel($data) {
     return $data;
 }
 
-// Customize checkout fields - remove unwanted fields and convert labels to placeholders
+// Align school code and class number fields in the same row
 add_filter('woocommerce_checkout_fields', 'fix_checkout_fields_alignment');
 function fix_checkout_fields_alignment($fields) {
 
-    // Remove unwanted fields
-    unset($fields['billing']['billing_postcode']); // Remove postcode field
-    
-    // Convert labels to placeholders for cleaner look
-    if (isset($fields['billing']['billing_first_name'])) {
-        $fields['billing']['billing_first_name']['placeholder'] = $fields['billing']['billing_first_name']['label'] . (isset($fields['billing']['billing_first_name']['required']) && $fields['billing']['billing_first_name']['required'] ? ' *' : '');
-        $fields['billing']['billing_first_name']['label'] = '';
+    // Ensure school fields are side-by-side
+    if (isset($fields['billing']['school_code'])) {
+        $fields['billing']['school_code']['class'] = array('form-row-first');
+        $fields['billing']['school_code']['priority'] = 31;
     }
-    
-    // Handle custom ID fields
-    if (isset($fields['billing']['id_number'])) {
-        $fields['billing']['id_number']['placeholder'] = $fields['billing']['id_number']['label'] . (isset($fields['billing']['id_number']['required']) && $fields['billing']['id_number']['required'] ? ' *' : '');
-        $fields['billing']['id_number']['label'] = '';
-    }
-    
-    if (isset($fields['billing']['id_confirm'])) {
-        $fields['billing']['id_confirm']['placeholder'] = $fields['billing']['id_confirm']['label'] . (isset($fields['billing']['id_confirm']['required']) && $fields['billing']['id_confirm']['required'] ? ' *' : '');
-        $fields['billing']['id_confirm']['label'] = '';
-    }
-    
-    if (isset($fields['billing']['billing_last_name'])) {
-        $fields['billing']['billing_last_name']['placeholder'] = $fields['billing']['billing_last_name']['label'] . (isset($fields['billing']['billing_last_name']['required']) && $fields['billing']['billing_last_name']['required'] ? ' *' : '');
-        $fields['billing']['billing_last_name']['label'] = '';
-    }
-    
-    if (isset($fields['billing']['billing_email'])) {
-        $fields['billing']['billing_email']['placeholder'] = $fields['billing']['billing_email']['label'] . (isset($fields['billing']['billing_email']['required']) && $fields['billing']['billing_email']['required'] ? ' *' : '');
-        $fields['billing']['billing_email']['label'] = '';
-    }
-    
-    if (isset($fields['billing']['billing_phone'])) {
-        $fields['billing']['billing_phone']['placeholder'] = $fields['billing']['billing_phone']['label'] . (isset($fields['billing']['billing_phone']['required']) && $fields['billing']['billing_phone']['required'] ? ' *' : '');
-        $fields['billing']['billing_phone']['label'] = '';
-    }
-    
-    if (isset($fields['billing']['phone_confirm'])) {
-        $fields['billing']['phone_confirm']['placeholder'] = $fields['billing']['phone_confirm']['label'] . (isset($fields['billing']['phone_confirm']['required']) && $fields['billing']['phone_confirm']['required'] ? ' *' : '');
-        $fields['billing']['phone_confirm']['label'] = '';
-    }
-    
-    if (isset($fields['billing']['billing_address_1'])) {
-        $fields['billing']['billing_address_1']['placeholder'] = $fields['billing']['billing_address_1']['label'] . (isset($fields['billing']['billing_address_1']['required']) && $fields['billing']['billing_address_1']['required'] ? ' *' : '');
-        $fields['billing']['billing_address_1']['label'] = '';
-    }
-    
-    // billing_address_2 already has placeholder, just remove label
-    if (isset($fields['billing']['billing_address_2'])) {
-        $fields['billing']['billing_address_2']['label'] = '';
-    }
-    
-    // City field - convert label to placeholder (this was missing according to user)
-    if (isset($fields['billing']['billing_city'])) {
-        $fields['billing']['billing_city']['placeholder'] = $fields['billing']['billing_city']['label'] . (isset($fields['billing']['billing_city']['required']) && $fields['billing']['billing_city']['required'] ? ' *' : '');
-        $fields['billing']['billing_city']['label'] = '';
-    }
-    
-    if (isset($fields['billing']['billing_country'])) {
-        $fields['billing']['billing_country']['placeholder'] = $fields['billing']['billing_country']['label'] . (isset($fields['billing']['billing_country']['required']) && $fields['billing']['billing_country']['required'] ? ' *' : '');
-        $fields['billing']['billing_country']['label'] = '';
+
+    if (isset($fields['billing']['class_number'])) {
+        $fields['billing']['class_number']['class'] = array('form-row-last');
+        $fields['billing']['class_number']['priority'] = 32;
     }
 
     // Align phone fields side-by-side
@@ -3753,81 +3721,3 @@ add_action('admin_init', function () {
         $role->add_cap('delete_others_courses');
     }
 });
-
-// Remove "Ship to a different address?" option
-add_filter('woocommerce_cart_needs_shipping_address', '__return_false');
-
-// Hide shipping fields completely
-add_filter('woocommerce_checkout_fields', 'remove_shipping_fields', 999);
-function remove_shipping_fields($fields) {
-    unset($fields['shipping']);
-    return $fields;
-}
-
-// Universal CSS fix for checkout fields with high priority
-add_action('wp_head', function() {
-    if (is_checkout()) {
-        echo '<style>
-        /* Hide shipping fields */
-        .woocommerce-shipping-fields,
-        .woocommerce-additional-fields {
-            display: none !important;
-        }
-        
-        /* FORCE HIDE ALL CHECKOUT FIELD LABELS - AGGRESSIVE */
-        .woocommerce-billing-fields .form-row label,
-        .woocommerce-checkout .form-row label,
-        .checkout .form-row label,
-        label.required_field,
-        .form-row label,
-        .woocommerce-billing-fields label,
-        .woocommerce-checkout label,
-        .checkout label,
-        label[for],
-        .required_field {
-            display: none !important;
-            visibility: hidden !important;
-            height: 0 !important;
-            width: 0 !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            opacity: 0 !important;
-            position: absolute !important;
-            left: -9999px !important;
-        }
-        
-        /* FORCE HIDE PROMO CODE FIELD - AGGRESSIVE */
-        #promo_code_field,
-        p#promo_code_field,
-        .form-row#promo_code_field,
-        [data-priority="100"],
-        .form-row[data-priority="100"],
-        .form-row.form-row-wide:last-child,
-        .woocommerce-billing-fields .form-row:last-child {
-            display: none !important;
-            visibility: hidden !important;
-            height: 0 !important;
-            width: 0 !important;
-            opacity: 0 !important;
-            position: absolute !important;
-            left: -9999px !important;
-        }
-        
-        /* Hide checkbox labels specifically */
-        .checkbox label,
-        label.checkbox,
-        input[type="checkbox"] + label {
-            display: none !important;
-            visibility: hidden !important;
-        }
-        
-        /* Ensure input fields are properly styled */
-        .woocommerce-billing-fields input[type="text"],
-        .woocommerce-billing-fields input[type="email"],
-        .woocommerce-billing-fields input[type="tel"] {
-            width: 100% !important;
-            margin-top: 0 !important;
-        }
-        </style>';
-    }
-}, 999); // High priority to override other styles

@@ -63,22 +63,6 @@ class Lilac_Course_Access {
         foreach ($order->get_items() as $item) {
             $product_id = $item->get_product_id();
             
-            // Check if this is a paused subscription product
-            $duration = get_post_meta($product_id, '_learndash_access_duration', true);
-            $is_paused_subscription = strpos($duration, 'paused_') === 0;
-            
-            // Check global flag to prevent enrollment
-            $prevent_enrollment = get_user_meta($user_id, 'prevent_immediate_enrollment', true);
-            
-            // DEBUG: Log theme order processing
-            error_log("THEME Course Access: Processing order {$order_id} for user {$user_id}, product {$product_id}, duration: {$duration}, is_paused: " . ($is_paused_subscription ? 'YES' : 'NO') . ", prevent_enrollment: " . ($prevent_enrollment ? 'YES' : 'NO'));
-            
-            if ($is_paused_subscription || $prevent_enrollment) {
-                // Skip enrollment for paused subscriptions - let the WC LearnDash Access Manager handle it
-                error_log("THEME Course Access: SKIPPING enrollment for paused subscription user {$user_id}, product {$product_id}");
-                continue;
-            }
-            
             // Check if this product is in our mappings
             $mappings = $this->get_product_mappings();
             if (isset($mappings[$product_id])) {

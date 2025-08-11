@@ -46,35 +46,6 @@
     box-shadow: 0 0 0 2px rgba(220, 50, 50, 0.2) !important;
 }
 
-/* Hide empty labels for cleaner look */
-.woocommerce-checkout .form-row label:empty {
-    display: none !important;
-}
-
-/* Style placeholders for better visibility */
-.woocommerce-checkout .input-text::placeholder,
-.woocommerce-checkout input[type="text"]::placeholder,
-.woocommerce-checkout input[type="email"]::placeholder,
-.woocommerce-checkout input[type="tel"]::placeholder,
-.woocommerce-checkout select::placeholder,
-.woocommerce-checkout textarea::placeholder {
-    color: #666 !important;
-    opacity: 1 !important;
-    font-style: normal !important;
-}
-
-/* Remove margin from form rows when labels are hidden */
-.woocommerce-checkout .form-row:has(label:empty) {
-    margin-bottom: 20px !important;
-}
-
-/* Hide removed fields if they still appear */
-.woocommerce-checkout #school_code_field,
-.woocommerce-checkout #class_number_field,
-.woocommerce-checkout #billing_postcode_field {
-    display: none !important;
-}
-
 /* Required field indicators */
 .woocommerce-checkout .form-row.validate-required label abbr {
     color: #dc3232 !important;

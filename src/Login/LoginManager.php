@@ -30,27 +30,16 @@ class LoginManager {
         }
         return self::$instance;
     }
-    
-    /**
-     * Initialize the plugin
-     * 
-     * @return LoginManager|null Instance of LoginManager or null if not available
-     */
-    public static function init() {
-        // Start session if not already started
-        if (!is_admin() && !(defined('WP_CLI') && WP_CLI)) {
-            if (!session_id() && !headers_sent()) {
-                session_start();
-            }
-            return self::get_instance();
-        }
-        return null;
-    }
 
     /**
      * Constructor
      */
     private function __construct() {
+        // Start session if not already started
+        if (!session_id()) {
+            session_start();
+        }
+
         // Register shortcodes
         add_shortcode('lilac_login', array($this, 'login_shortcode'));
         add_shortcode('lilac_teacher_lostpassword', array($this, 'teacher_lostpassword_shortcode'));
@@ -207,30 +196,10 @@ class LoginManager {
     }
     
     /**
-     * Check if a user is a teacher/instructor based on various role names
-     * 
-     * @param array $user_roles Array of user roles
-     * @return bool True if user is a teacher/instructor
+     * Get the appropriate redirect URL based on user role
      */
-    private function is_teacher($user_roles) {
-        // List of role names that identify a teacher/instructor
-        $teacher_roles = array(
-            'instructor', 'Instructor', 'school_teacher', 'teacher', 'Teacher',
-            'school|_teacher', 'swd', 'wdm', 'educator', 'tutor', 'lecturer'
-        );
-        
-        // Check if any of the user's roles match our teacher roles
-        foreach ($user_roles as $role) {
-            if (in_array(strtolower($role), array_map('strtolower', $teacher_roles))) {
-                return true;
-            }
-        }
-        
-        return false;
-    }
-    
     /**
-     * Get redirect URL for users based on their enrolled courses and role
+     * Get redirect URL for users based on their enrolled courses
      * 
      * @param WP_User $user The logged-in user object
      * @return string The redirect URL
@@ -239,14 +208,6 @@ class LoginManager {
         // Default to home page
         $redirect_url = home_url();
         $roles = (array) $user->roles;
-        
-        // Check for teacher redirect from the form
-        $teacher_redirect = isset($_POST['teacher_redirect']) ? esc_url_raw($_POST['teacher_redirect']) : '';
-        
-        // If this is a teacher and we have a teacher_redirect URL, use it
-        if ($this->is_teacher($roles) && !empty($teacher_redirect)) {
-            return $teacher_redirect;
-        }
         
         // Check if LearnDash is active
         if (function_exists('learndash_user_get_enrolled_courses')) {
@@ -267,13 +228,8 @@ class LoginManager {
         
         // Fallback to role-based redirects if no courses found or LearnDash not active
         
-        // Check for teacher roles first
-        if ($this->is_teacher($roles)) {
-            // Default teacher redirect to admin dashboard
-            return admin_url('admin.php?page=class-management');
-        }
         // Students
-        elseif (in_array('school_student', $roles)) {
+        if (in_array('school_student', $roles)) {
             $redirect_url = get_permalink(get_option('lilac_school_student_dashboard_page', 0));
             if (!$redirect_url) {
                 // Fallback to course page or dashboard
@@ -288,10 +244,10 @@ class LoginManager {
                 $redirect_url = get_permalink(get_option('lilac_private_course_page', 0)) ?: home_url('/my-courses/');
             }
         }
-        
-        // Check if there's a custom redirect in the form
-        if (isset($_POST['redirect_to']) && !empty($_POST['redirect_to'])) {
-            $redirect_url = esc_url_raw($_POST['redirect_to']);
+        // Teachers
+        elseif (in_array('school_teacher', $roles)) {
+            // Direct teachers to the admin dashboard page instead of frontend
+            $redirect_url = admin_url('admin.php?page=class-management');
         }
         
         // Allow filtering the redirect URL
@@ -687,6 +643,19 @@ class LoginManager {
         }
     }
     
+    /**
+     * Initialize the plugin
+     * 
+     * @return LoginManager|null Instance of LoginManager or null if not available
+     */
+    public static function init() {
+        if (!is_admin() && !(defined('WP_CLI') && WP_CLI)) {
+            if (class_exists('Lilac\\Login\\LoginManager')) {
+                return self::get_instance();
+            }
+        }
+        return null;
+    }
 }
 
 // Only add the action if we're not in admin
